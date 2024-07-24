@@ -5,6 +5,7 @@ import { ErrorBoundary } from '@sentry/nextjs';
 import Header from '@/components/Global/Header';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,22 @@ export default function RootLayout({
             >
               <Header />
               {children}
+              <Toaster
+                position='bottom-right'
+                toastOptions={{
+                  // className: 'border border-accent bg-dark-700 text-accent2',
+                  success: {
+                    iconTheme: {
+                      primary: '#549412',
+                      secondary: '#f4f6f7',
+                    },
+                  },
+                  style: {
+                    color: '#5029a6',
+                    backgroundColor: '#808b96',
+                  },
+                }}
+              />
             </ThemeProvider>
           </ErrorBoundary>
         </body>

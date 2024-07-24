@@ -4,10 +4,12 @@ import Image from 'next/image';
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { CheckCircle, CircleArrowDown, Hammer, Rocket, Save } from 'lucide-react';
+import toast from 'react-hot-toast';
 function FileUploader() {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
     console.log(acceptedFiles);
+    toast.success(`DocuBot has consumed the Document: ${acceptedFiles[0].name}` as string);
   }, []);
   const { getRootProps, getInputProps, isDragActive, isFocused, isDragAccept } = useDropzone({
     onDrop,

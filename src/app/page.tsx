@@ -5,45 +5,22 @@ import Link from 'next/link';
 
 import { FilePlus2, TextSearch, Binary, DatabaseZap, FileOutput, Eye } from 'lucide-react';
 import Footer from '@/components/Global/Footer';
+import featuresData from '@/l/util/constants.json';
 
-const features = [
-  {
-    title: 'Store and Chat with your PDFs & documents',
-    description:
-      'Store your documents and chat with them in real-time. Ask questions, perform data analysis, edit your documents, and more.',
-    icon: FilePlus2,
-  },
-  {
-    title: 'Chat with and analyze entire code repositories',
-    description:
-      'Chat with your code repositories. Find bugs, get code improvements, write tests, and more.',
-    icon: Binary,
-  },
-  {
-    title: 'Code Search',
-    description: 'Search your code repositories. Find the code you need with a simple search.',
-    icon: TextSearch,
-  },
-  {
-    title: 'Document Management',
-    description:
-      'Manage your documents and code repositories in one place. Easily search, filter, and sort your documents.',
-    icon: DatabaseZap,
-  },
-  {
-    title: 'Export your chats to multiple formats.',
-    description:
-      'Export your chats to multiple formats. You can export your chats to a PDF, CSV or a JSON file.',
-    icon: FileOutput,
-  },
-  {
-    title: 'Responsive Across Deivices',
-    description: 'View your documents on any device, anywhere, with a user friendly interface.',
-    icon: Eye,
-  },
-];
+const iconMap = {
+  FilePlus2,
+  TextSearch,
+  Binary,
+  DatabaseZap,
+  FileOutput,
+  Eye,
+};
 
 export default function Home() {
+  const features = featuresData.features.map((feature) => ({
+    ...feature,
+    icon: iconMap[feature.icon as keyof typeof iconMap],
+  }));
   return (
     <>
       <main className='flex flex-col items-center overflow-scroll overflow-x-hidden bg-gradient-to-bl from-accent3/40 to-accent2/40'>

@@ -45,7 +45,7 @@ const config: Config = {
         accent: '#8db600',
         accent2: '#5029a6',
         accent3: '#7a3e6e',
-        accent4: '#549412 ',
+        accent4: '#549412',
         dark: {
           100: '#d5d8dc',
           200: '#abb2b9',
