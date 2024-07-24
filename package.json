@@ -10,7 +10,7 @@
     "fix": "next lint --fix",
     "check": "prettier --check .",
     "format": "prettier --write .",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "prepare": "husky install",
     "deploy": "vercel",
