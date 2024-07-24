@@ -16,10 +16,6 @@
     "deploy": "vercel",
     "prod": "vercel --prod"
   },
-  "engines": {
-    "node": ">=20.8.0",
-    "npm": ">=10.8.1"
-  },
   "dependencies": {
     "@clerk/elements": "^0.10.5",
     "@clerk/nextjs": "^5.2.6",
@@ -41,6 +37,8 @@
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
     "tailwind-merge": "^2.4.0",
     "tailwind-scrollbar-hide": "^1.1.7",

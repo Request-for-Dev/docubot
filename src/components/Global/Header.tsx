@@ -1,4 +1,4 @@
-import { SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -7,11 +7,19 @@ import { dark } from '@clerk/themes';
 
 const Header = () => {
   return (
-    <header className='flex items-center justify-between bg-light-600 px-5 py-3 dark:bg-dark-800'>
-      <Link href='/' className='flex items-center space-x-4'>
-        <Image src='/logo.png' alt='logo' width={45} height={45} />
-        <h1 className='text-4xl font-bold'>DocuBot</h1>
-      </Link>
+    <header className='flex items-center justify-between bg-light-600 px-5 py-3 shadow-xl shadow-dark-800/30 dark:bg-dark-800'>
+      <SignedOut>
+        <Link href='/' className='flex items-center space-x-4'>
+          <Image src='/logo.png' alt='logo' width={45} height={45} />
+          <h1 className='text-4xl font-bold'>DocuBot</h1>
+        </Link>
+      </SignedOut>
+      <SignedIn>
+        <Link href='/dashboard' className='flex items-center space-x-4'>
+          <Image src='/logo.png' alt='logo' width={45} height={45} />
+          <h1 className='text-4xl font-bold'>DocuBot</h1>
+        </Link>
+      </SignedIn>
       <div className='flex items-center space-x-4'>
         {/* User Button / Login Functions  */}
         <UserButton

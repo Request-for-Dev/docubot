@@ -70,7 +70,7 @@ Project version updated for Next.js 13.4.8 [This project will be maintained to r
 
 ## Main
 
-- [ ]
+- [ ] Page Routes for Pricing, Upload File, Upload Repo, Upgrade Account, Account Settings
 - [ ]
 - [ ]
 
