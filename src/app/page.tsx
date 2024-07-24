@@ -3,41 +3,41 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-import { ServerCog, MonitorSmartphone, Globe, Zap, BrainCog, Eye } from 'lucide-react';
+import { FilePlus2, TextSearch, Binary, DatabaseZap, FileOutput, Eye } from 'lucide-react';
 
 const features = [
   {
-    title: 'Store and Chat with your PDFs & Documents',
+    title: 'Store and Chat with your PDFs & documents',
     description:
-      'Manage your documents and code repositories in one place. Easily search, filter, and sort your documents.',
-    icon: ServerCog,
+      'Store your documents and chat with them in real-time. Ask questions, perform data analysis, edit your documents, and more.',
+    icon: FilePlus2,
   },
   {
-    title: 'Chat with your team',
+    title: 'Chat with and analyze entire code repositories',
     description:
-      'Chat with your team in real time. Share your documents and code repositories with your team.',
-    icon: MonitorSmartphone,
+      'Chat with your code repositories. Find bugs, get code improvements, write tests, and more.',
+    icon: Binary,
   },
   {
     title: 'Code Search',
     description: 'Search your code repositories. Find the code you need with a simple search.',
-    icon: Globe,
+    icon: TextSearch,
   },
   {
     title: 'Document Management',
     description:
       'Manage your documents and code repositories in one place. Easily search, filter, and sort your documents.',
-    icon: Zap,
+    icon: DatabaseZap,
   },
   {
-    title: 'Chat with your team',
+    title: 'Export your chats to multiple formats.',
     description:
-      'Chat with your team in real time. Share your documents and code repositories with your team.',
-    icon: BrainCog,
+      'Export your chats to multiple formats. You can export your chats to a PDF, CSV or a JSON file.',
+    icon: FileOutput,
   },
   {
     title: 'Responsive Across Deivices',
-    description: 'Search your code repositories. Find the code you need with a simple search.',
+    description: 'View your documents on any device, anywhere, with a user friendly interface.',
     icon: Eye,
   },
 ];
@@ -91,8 +91,8 @@ export default function Home() {
 
         {/* map thru features  */}
 
-        <div className=''>
-          <dl className='gapy-y-10 mx-auto grid max-w-2xl grid-cols-1 gap-x-6 px-6 text-base text-dark-700 dark:text-light-700 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16 lg:px-8'>
+        <div className='mb-3 md:mb-6 lg:mb-10'>
+          <dl className='gapy-y-10 mx-auto grid max-w-2xl grid-cols-1 gap-x-6 px-6 text-base text-dark-700 dark:text-light-700 sm:grid-cols-2 lg:mx-0 lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16 lg:px-8'>
             {features.map((feature) => (
               <div key={feature.title} className='relative'>
                 <dt className='inline font-semibold text-dark-800 dark:text-light-600'>
