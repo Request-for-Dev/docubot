@@ -10,7 +10,7 @@ const Header = () => {
     <header className='flex items-center justify-between bg-light-600 dark:bg-dark-800 px-5 py-3'>
       <Link href='/' className='flex items-center space-x-4'>
         <Image src='/logo.png' alt='logo' width={45} height={45}  />
-        <h1 className='text-4xl font-bold'>DocuBot</h1>
+        <h1 className='text-4xl font-bold'>DocuBot!</h1>
       </Link>
       <div className='flex space-x-4 items-center'>
         {/* User Button / Login Functions  */}
