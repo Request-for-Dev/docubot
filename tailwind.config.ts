@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Config } from 'tailwindcss';
 import plugin from 'tailwindcss/plugin';
+import daisyui from 'daisyui';
 
 const config: Config = {
   darkMode: ['class'],
@@ -581,6 +582,7 @@ const config: Config = {
     },
   },
   plugins: [
+    daisyui,
     require('tailwind-scrollbar-hide'),
     require('tailwindcss-animate'),
     plugin(({ theme, addUtilities }: { theme: any; addUtilities: (arg0: any) => void }) => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,15 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-
 function UserMenu() {
   // Get Session Data
-  
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        Account Menu
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger>Account Menu</DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -29,4 +26,4 @@ function UserMenu() {
   );
 }
 
-export default UserMenu
+export default UserMenu;

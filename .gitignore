@@ -47,7 +47,7 @@ yarn-error.log*
 .env
 .env.local
 studio/.env.development
-
+service_key.json
 # Typescript
 *.tsbuildinfo
 
