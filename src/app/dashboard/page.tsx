@@ -1,6 +1,6 @@
 import Documents from '@/components/Dashboard/Documents';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic' as never;
 function Dashboard() {
   return (
     <div className='mx-auto h-full max-w-7xl'>

@@ -16,7 +16,7 @@ function FileUploader() {
   });
 
   return (
-    <div className='mx-auto flex max-w-7xl flex-col items-center gap-4'>
+    <div className='font mx-auto flex max-w-7xl flex-col items-center gap-4'>
       <div
         {...getRootProps()}
         className={`mt-12 flex h-86 w-[75%] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-10 text-center text-accent2 dark:border-accent2 dark:text-accent ${
