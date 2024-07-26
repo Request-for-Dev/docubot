@@ -22,6 +22,37 @@ const model = new ChatOpenAI({
 
 export const indexName = 'docubot';
 
+async function fetchMessagesFromDB(docId: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error('No user logged in');
+    //TODO: Send Error to Sentry
+  }
+
+  console.log('--- Fetching messages from DB... ---');
+  //get the last 6 messages from the chat history
+  const chats = await adminDB
+    .collection('users')
+    .doc(userId)
+    .collection('files')
+    .doc(docId)
+    .collection('chat')
+    .orderBy('createdAt', 'desc')
+    // .limit(6)
+    .get();
+
+  const chatHistory = chats.docs.map((doc) =>
+    doc.data().role === 'human'
+      ? new HumanMessage(doc.data().message)
+      : new AIMessage(doc.data().message)
+  );
+
+  console.log(`--- ${chatHistory.length} Messages fetched sucessfully. ---`);
+  console.log(chatHistory.map((msg) => msg.content.toString()));
+
+  return chatHistory;
+}
+
 export async function generateDocs(docId: string) {
   const { userId } = await auth();
 
@@ -115,3 +146,84 @@ export async function generateEmbeddingsWithPineconeVectorStore(docId: string) {
     return pineconeVectorStore;
   }
 }
+
+const generateLangChainCompletion = async (docId: string, question: string) => {
+  let pineconeVectorStore;
+
+  // eslint-disable-next-line prefer-const
+  pineconeVectorStore = await generateEmbeddingsWithPineconeVectorStore(docId);
+  if (!pineconeVectorStore) {
+    throw new Error('No Pinecone Vector Store found');
+    //TODO: Send Error to Sentry
+  }
+
+  // Create the Retriever Chain
+  console.log('--- Creating the Retriever Chain... ---');
+  const retriever = pineconeVectorStore.asRetriever();
+
+  // Fetch the chat history from the database
+  const chatHistory = await fetchMessagesFromDB(docId);
+
+  // Define a propmpt template for generating search queries based on conversation history
+  console.log(
+    '--- Defining a prompt template for generating search queries based on conversation history... ---'
+  );
+  const historyAwarePrompt = ChatPromptTemplate.fromMessages([
+    ...chatHistory, // Insert the actual chat History here
+
+    ['user', '{input}'],
+    [
+      'user',
+      'Given the above conversation, generate a search query to lookup in order to get information relevant to the conversation',
+    ],
+  ]);
+
+  //Creat a history aware retriever
+  console.log('--- Creating a history aware retriever chain... ---');
+  const historyAwareRetrieverChain = await createHistoryAwareRetriever({
+    llm: model,
+    retriever,
+    rephrasePrompt: historyAwarePrompt,
+  });
+
+  //Define a prompt template for answering questions based on retrieved context
+  console.log(
+    '--- Defining a prompt template for answering questions based on retrieved context... ---'
+  );
+  const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
+    ['system', "Answer the user's question based on the below context:\n\n{context}"],
+
+    ...chatHistory, // Insert the actual chat History here
+
+    ['user', '{input}'],
+  ]);
+
+  //Create a document combining chain to create coherant responses
+  console.log('--- Creating a document combining chain to create coherant responses... ---');
+  const historyAwareCombineDocsChain = await createStuffDocumentsChain({
+    llm: model,
+    prompt: historyAwareRetrievalPrompt,
+  });
+
+  //Create the main history aware retriever chain
+  console.log('--- Creating the main history aware retriever chain... ---');
+  const conversationalRetrievalChain = await createRetrievalChain({
+    retriever: historyAwareRetrieverChain,
+    combineDocsChain: historyAwareCombineDocsChain,
+  });
+
+  //Create the AI Reply
+  console.log('--- Creating the AI Reply... ---');
+  const reply = await conversationalRetrievalChain.invoke({
+    chat_history: chatHistory,
+    input: question,
+  });
+
+  //Print the result to the console
+  console.log(reply.answer);
+  return reply.answer;
+};
+
+//export the model and run the function
+
+export { model, generateLangChainCompletion };
