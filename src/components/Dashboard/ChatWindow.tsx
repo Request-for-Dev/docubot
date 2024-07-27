@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 // import ChatMessage from '@/components/Dashboard/ChatMessage';
 // eslint-disable-next-line import/no-cycle
 import { askQuestion } from '@/actions/openAI/askQuestion';
+import ChatMessage from './ChatMessage';
 
 export type Message = {
   id?: string;
@@ -29,6 +30,7 @@ function ChatWindow({ id }: { id: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isPending, startTransition] = useTransition();
+  const bottomofChatRef = useRef<HTMLDivElement>(null);
 
   const [snapshot, loading, error] = useCollection(
     user &&
@@ -95,20 +97,30 @@ function ChatWindow({ id }: { id: string }) {
       <div className='w-full flex-1'>
         {/* Chat Messages  */}
 
-        {messages.map((message) => (
-          <div key={message.id} className='flex flex-col space-y-1'>
-            {/* <ChatMessage message={message} /> */}
-            <div className='flex items-center space-x-2'>
-              <div
-                className={`flex items-center space-x-1 ${message.role === 'ai' ? 'text-accent' : 'text-primary'}`}
-              >
-                <span className='font-bold'>{message.role === 'ai' ? 'DocuBot' : 'You'}</span>
-                <span className='text-xs'>{message.createdAt.toLocaleString()}</span>
-              </div>
-              <div>{message.message}</div>
-            </div>
+        {loading ? (
+          <div className='flex items-center justify-center'>
+            <Loader2 className='animate-spin' />
           </div>
-        ))}
+        ) : (
+          <div>
+            {/* {messages.length === 0 && (
+          // <ChatMessage
+          // key='placeholder'
+
+          // message={{
+          //   role: 'ai',
+          //   message: 'No messages yet',
+          //   createdAt: new Date(),
+          // }}
+          // />
+        )} */}
+
+            {/* {messages.map((message, index) => (
+          // <ChatMessage key={index} message={message} />
+        ))} */}
+            <div ref={bottomofChatRef} />
+          </div>
+        )}
       </div>
       <form
         action=''
