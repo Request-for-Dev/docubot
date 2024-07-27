@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { Button } from '../ui/button';
 import { FilePlus2, UserRoundPlus, UserRoundCog, FolderGit2 } from 'lucide-react';
+import UpgradeButton from '../Dashboard/UpgradeButton';
 
 function SubHeader() {
   return (
@@ -27,6 +28,7 @@ function SubHeader() {
             <UserRoundPlus />
           </Link>
         </Button>
+        <UpgradeButton />
         <Button asChild variant='default' className=''>
           <Link href='/settings'>
             <UserRoundCog />

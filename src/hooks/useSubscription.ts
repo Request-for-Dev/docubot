@@ -1,3 +1,4 @@
+//  useSubscription.ts
 'use client';
 
 import { db } from '#/firebase';

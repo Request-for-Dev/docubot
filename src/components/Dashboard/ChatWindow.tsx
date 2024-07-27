@@ -1,3 +1,4 @@
+//ChatWindow.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
@@ -67,6 +68,8 @@ function ChatWindow({ id }: { id: string }) {
 
     startTransition(async () => {
       const { success, message } = await askQuestion(id, q);
+
+      console.log('DEBUG', success, message);
 
       if (!success) {
         toast.error(`Error: ${message}`);
