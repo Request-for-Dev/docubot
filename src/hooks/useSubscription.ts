@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { db } from '#/firebase';
@@ -7,32 +6,33 @@ import { collection, doc } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
-// number of documents by subscription tier
 const FREE_DOC_LIMIT = 2;
 const PRO_DOC_LIMIT = 20;
+
 function useSubscription() {
-  const [hasActiveMembership, setHasActiveMembership] = useState(null);
+  const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
   const [isOverFileLimit, setIsOverFileLimit] = useState(false);
+  console.log('🚀 ~ useSubscription ~ isOverFileLimit:', isOverFileLimit);
   const { user } = useUser();
 
-  // Listen to the User document for changes
-  const [snapshot, loading, error] = useDocument(user && doc(db, 'users', user.id), {
+  const userDocRef = user ? doc(db, 'users', user.id) : null;
+  const userFilesCollectionRef = user ? collection(db, 'users', user.id, 'files') : null;
+
+  const [snapshot, loading, error] = useDocument(userDocRef, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
-  // Listen to the User's Documents collection for changes
-  const [docsSnapshot, docsLoading, docsError] = useCollection(
-    user && collection(db, 'users', user.id, 'files')
-  );
+  const [docsSnapshot, docsLoading, docsError] = useCollection(userFilesCollectionRef);
 
-  // Realtime listener for the users collections
   useEffect(() => {
-    if (!snapshot) return;
-
-    const data = snapshot.data();
-    if (!data) return;
-
-    setHasActiveMembership(data.hasActiveMembership);
+    console.log('🚀 ~ DEBUG ~ snapshot from useEffect #1 Hook:', snapshot);
+    if (snapshot && snapshot.exists()) {
+      const data = snapshot.data();
+      console.log('🚀 ~ DEBUG ~ data from useEffect #1 Hook:', data);
+      setHasActiveMembership(data?.hasActiveMembership ?? false);
+    } else {
+      setHasActiveMembership(false);
+    }
   }, [snapshot]);
 
   useEffect(() => {
@@ -40,14 +40,12 @@ function useSubscription() {
 
     const docs = docsSnapshot.docs;
     const usersLimit = hasActiveMembership ? PRO_DOC_LIMIT : FREE_DOC_LIMIT;
-
+    console.log('🚀 ~ DEBUG ~ docs from useEffect#2 Hook:', docs);
     console.log('Checking if the user is over the Doc Limit.', docs.length, usersLimit);
-    if (docs.length >= usersLimit) {
-      setIsOverFileLimit(true);
-    } else {
-      setIsOverFileLimit(false);
-    }
+    setIsOverFileLimit(docs.length >= usersLimit);
   }, [docsSnapshot, hasActiveMembership]);
+
+  console.log('🚀 ~ DEBUG ~ hasActiveMembership from pre return:', hasActiveMembership);
 
   return {
     hasActiveMembership,

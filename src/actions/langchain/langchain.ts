@@ -11,7 +11,7 @@ import pineconeClient from '@/lib/pinecone';
 import { PineconeStore } from '@langchain/pinecone';
 import { PineconeConflictError } from '@pinecone-database/pinecone/dist/errors';
 import { Index, RecordMetadata } from '@pinecone-database/pinecone';
-import { adminDB } from '#/firebaseAdmin';
+import { adminDb } from '#/firebaseAdmin';
 import { auth } from '@clerk/nextjs/server';
 
 //Initialize the OpenAI model with LangChain using your API key
@@ -31,7 +31,7 @@ async function fetchMessagesFromDB(docId: string) {
 
   console.log('--- Fetching messages from DB... ---');
   //get the last 6 messages from the chat history
-  const chats = await adminDB
+  const chats = await adminDb
     .collection('users')
     .doc(userId)
     .collection('files')
@@ -62,7 +62,7 @@ export async function generateDocs(docId: string) {
   }
 
   console.log('--- Fecthing the download URL from Firebase... ---');
-  const firebaseRef = await adminDB
+  const firebaseRef = await adminDb
     .collection('users')
     .doc(userId)
     .collection('files')

@@ -1,4 +1,4 @@
-import { adminDB } from '#/firebaseAdmin';
+import { adminDb } from '#/firebaseAdmin';
 import ChatWindow from '@/components/Dashboard/ChatWindow';
 import PDFViewer from '@/components/Dashboard/PDFViewer';
 import { auth } from '@clerk/nextjs/server';
@@ -9,7 +9,7 @@ async function ChatWithDocumentPage({ params: { id } }: { params: { id: string }
   auth().protect();
   const { userId } = await auth();
 
-  const ref = await adminDB.collection('users').doc(userId!).collection('files').doc(id).get();
+  const ref = await adminDb.collection('users').doc(userId!).collection('files').doc(id).get();
 
   const url = ref.data()?.downloadURL;
   // console.log("🚀 ~ ChatWithDocumentPage ~ url:", url)

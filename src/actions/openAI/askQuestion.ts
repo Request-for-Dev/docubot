@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 'use server';
 
-import { adminDB } from '#/firebaseAdmin';
+import { adminDb } from '#/firebaseAdmin';
 // eslint-disable-next-line import/no-cycle
 import { Message } from '@/components/Dashboard/ChatWindow';
 import { auth } from '@clerk/nextjs/server';
@@ -14,7 +14,7 @@ export async function askQuestion(id: string, question: string) {
   auth().protect();
   const { userId } = await auth();
 
-  const chatRef = adminDB
+  const chatRef = adminDb
     .collection('users')
     .doc(userId!)
     .collection('files')

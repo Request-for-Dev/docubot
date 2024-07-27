@@ -1,9 +1,9 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable import/prefer-default-export */
 'use server';
-import { adminDB } from '#/firebaseAdmin';
+import { adminDb } from '#/firebaseAdmin';
 import { UserDetails } from '@/app/dashboard/upgrade/page';
-import stripe from '@/lib/stripe';
+import { stripe } from '@/lib/stripe';
 import { auth } from '@clerk/nextjs/server';
 import { getBaseURL } from '@/lib/util/getBaseURL';
 export async function createCheckoutSession(userDetails: UserDetails) {
@@ -13,16 +13,17 @@ export async function createCheckoutSession(userDetails: UserDetails) {
     throw new Error('No user found');
   }
 
-  // Check if the user already has a stripeCustomerID in our database
-  let stripeCustomerID;
+  // Check if the user already has a stripecustomerId in our database
+  let stripecustomerId;
 
-  const user = await adminDB.collection('users').doc(userId).get();
+  const user = await adminDb.collection('users').doc(userId).get();
+  console.log('🚀 ~ createCheckoutSession ~ userId:', userId);
 
-  stripeCustomerID = user.data()?.stripeCustomerID;
+  stripecustomerId = user.data()?.stripecustomerId;
+  console.log('🚀 ~ createCheckoutSession ~ stripecustomerId:', stripecustomerId);
 
-  if (!stripeCustomerID) {
+  if (!stripecustomerId) {
     // Create a new customer in stripe
-
     const customer = await stripe.customers.create({
       email: userDetails.email,
       name: userDetails.name,
@@ -31,14 +32,14 @@ export async function createCheckoutSession(userDetails: UserDetails) {
       },
     });
 
-    await adminDB.collection('users').doc(userId).set({
-      stripeCustomerID: customer.id,
+    // This Works and puts the stripe ID in the database
+    await adminDb.collection('users').doc(userId).set({
+      stripecustomerId: customer.id,
     });
-    stripeCustomerID = customer.id;
+    stripecustomerId = customer.id;
   }
 
   const session = await stripe.checkout.sessions.create({
-    // payment_method_types: ['card'],
     line_items: [
       {
         price: 'price_1PgsG0L5fHlelvMaN2hhzUN8',
@@ -46,9 +47,9 @@ export async function createCheckoutSession(userDetails: UserDetails) {
       },
     ],
     mode: 'subscription',
-    customer: stripeCustomerID,
+    customer: stripecustomerId,
+    // getBaseURL works and the function runs past here
     success_url: `${getBaseURL()}/dashboard?upgrade=true`,
-    // success_url: `${getBaseURL()}/dashboard/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${getBaseURL()}/dashboard/upgrade?upgrade=false`,
   });
 

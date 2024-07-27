@@ -23,7 +23,7 @@ function SubHeader() {
       </div>
       <div className='flex items-center justify-center space-x-4'>
         <Button asChild variant='default' className=''>
-          <Link href='/upgrade'>
+          <Link href='/dashboard/upgrade'>
             <UserRoundPlus />
           </Link>
         </Button>
