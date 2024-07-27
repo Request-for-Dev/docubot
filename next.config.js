@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // webpack: (config) => {
+  //   config.resolve.alias.canvas = false;
+
+  //   return config;
+  // },
   reactStrictMode: true,
   swcMinify: true,
   trailingSlash: true,
@@ -12,7 +17,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'scoop-sustain.s3.amazonaws.com',
+        hostname: 'img.clerk.com',
       },
       {
         protocol: 'https',

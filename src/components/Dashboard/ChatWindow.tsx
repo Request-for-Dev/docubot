@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 // import ChatMessage from '@/components/Dashboard/ChatMessage';
 // eslint-disable-next-line import/no-cycle
 import { askQuestion } from '@/actions/openAI/askQuestion';
+// eslint-disable-next-line import/no-cycle
 import ChatMessage from './ChatMessage';
 
 export type Message = {
@@ -37,6 +38,10 @@ function ChatWindow({ id }: { id: string }) {
       query(collection(db, 'users', user?.id, 'files', id, 'chat'), orderBy('createdAt', 'asc'))
   );
 
+  useEffect(() => {
+    bottomofChatRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }),
+    [messages];
   useEffect(() => {
     if (!snapshot) return;
     console.log('Updated snapshot', snapshot.docs);
@@ -102,22 +107,21 @@ function ChatWindow({ id }: { id: string }) {
             <Loader2 className='animate-spin' />
           </div>
         ) : (
-          <div>
-            {/* {messages.length === 0 && (
-          // <ChatMessage
-          // key='placeholder'
+          <div className='p-5'>
+            {messages.length === 0 && (
+              <ChatMessage
+                key='placeholder'
+                message={{
+                  role: 'ai',
+                  message: 'No messages yet',
+                  createdAt: new Date(),
+                }}
+              />
+            )}
 
-          // message={{
-          //   role: 'ai',
-          //   message: 'No messages yet',
-          //   createdAt: new Date(),
-          // }}
-          // />
-        )} */}
-
-            {/* {messages.map((message, index) => (
-          // <ChatMessage key={index} message={message} />
-        ))} */}
+            {messages.map((message, index) => (
+              <ChatMessage key={index} message={message} />
+            ))}
             <div ref={bottomofChatRef} />
           </div>
         )}
