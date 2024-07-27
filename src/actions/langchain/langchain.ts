@@ -29,7 +29,7 @@ async function fetchMessagesFromDB(docId: string) {
     //TODO: Send Error to Sentry
   }
 
-  console.log('--- Fetching messages from DB... ---');
+  // //console.log('--- Fetching messages from DB... ---');
   //get the last 6 messages from the chat history
   const chats = await adminDb
     .collection('users')
@@ -47,8 +47,8 @@ async function fetchMessagesFromDB(docId: string) {
       : new AIMessage(doc.data().message)
   );
 
-  console.log(`--- ${chatHistory.length} Messages fetched sucessfully. ---`);
-  console.log(chatHistory.map((msg) => msg.content.toString()));
+  //console.log(`--- ${chatHistory.length} Messages fetched sucessfully. ---`);
+  //console.log(chatHistory.map((msg) => msg.content.toString()));
 
   return chatHistory;
 }
@@ -61,7 +61,7 @@ export async function generateDocs(docId: string) {
     //TODO: Send Error to Sentry
   }
 
-  console.log('--- Fecthing the download URL from Firebase... ---');
+  //console.log('--- Fecthing the download URL from Firebase... ---');
   const firebaseRef = await adminDb
     .collection('users')
     .doc(userId)
@@ -76,7 +76,7 @@ export async function generateDocs(docId: string) {
     //TODO: Send Error to Sentry
   }
 
-  console.log(`--- Download URL fetched sucessfully. ${downloadURL} ---`);
+  //console.log(`--- Download URL fetched sucessfully. ${downloadURL} ---`);
 
   // Fetch the PDF from the specified URL
   const response = await fetch(downloadURL);
@@ -85,16 +85,16 @@ export async function generateDocs(docId: string) {
   const data = await response.blob();
 
   //Load the PDF document from the specified path
-  console.log('--- Loading PDF Document... ---');
+  //console.log('--- Loading PDF Document... ---');
   const loader = new PDFLoader(data);
   const docs = await loader.load();
-  console.log('--- PDF Document loaded sucessfully. ---');
+  //console.log('--- PDF Document loaded sucessfully. ---');
 
   //Split the PDF into smaller chunks for smoother processing
-  console.log('--- Splitting PDF into smaller chunks... ---');
+  //console.log('--- Splitting PDF into smaller chunks... ---');
   const splitter = new RecursiveCharacterTextSplitter();
   const splitDocs = await splitter.splitDocuments(docs);
-  console.log(`--- PDF Document split into ${splitDocs.length} chunks sucessfully. ---`);
+  //console.log(`--- PDF Document split into ${splitDocs.length} chunks sucessfully. ---`);
 
   return splitDocs;
 }
@@ -114,15 +114,13 @@ export async function generateEmbeddingsWithPineconeVectorStore(docId: string) {
   let pineconeVectorStore;
 
   // Generate Vector Embeddings for the split documents with Pinecone
-  console.log('--- Generating Vector Embeddings with Pinecone. Begin... ---');
+  //console.log('--- Generating Vector Embeddings with Pinecone. Begin... ---');
   const embeddings = new OpenAIEmbeddings();
   const index = pineconeClient.index(indexName);
 
   const namespaceAlreadyExists = await namespaceExists(index, docId);
   if (namespaceAlreadyExists) {
-    console.log(
-      `--- ${docId} namespace already exsist in Pinecone. Reusing exsisting embeddings... ---`
-    );
+    //console.log(`--- ${docId} namespace already exsist in Pinecone. Reusing exsisting embeddings... ---`);
 
     pineconeVectorStore = await PineconeStore.fromExistingIndex(embeddings, {
       pineconeIndex: index,
@@ -134,9 +132,7 @@ export async function generateEmbeddingsWithPineconeVectorStore(docId: string) {
     // If the namespace does not exist, download the PDF file from Firebase Storage then generate the Vector Embeddings, and store them in Pinecone vectorr store.
     const splitDocs = await generateDocs(docId);
 
-    console.log(
-      `--- Storing Vector Embeddings in namespace ${docId} in the ${indexName} Pinecone Vector Store. Begin... ---`
-    );
+    //console.log( `--- Storing Vector Embeddings in namespace ${docId} in the ${indexName} Pinecone Vector Store. Begin... ---`);
 
     pineconeVectorStore = await PineconeStore.fromDocuments(splitDocs, embeddings, {
       pineconeIndex: index,
@@ -158,16 +154,14 @@ const generateLangChainCompletion = async (docId: string, question: string) => {
   }
 
   // Create the Retriever Chain
-  console.log('--- Creating the Retriever Chain... ---');
+  //console.log('--- Creating the Retriever Chain... ---');
   const retriever = pineconeVectorStore.asRetriever();
 
   // Fetch the chat history from the database
   const chatHistory = await fetchMessagesFromDB(docId);
 
   // Define a propmpt template for generating search queries based on conversation history
-  console.log(
-    '--- Defining a prompt template for generating search queries based on conversation history... ---'
-  );
+  //console.log(    '--- Defining a prompt template for generating search queries based on conversation history... ---'  );
   const historyAwarePrompt = ChatPromptTemplate.fromMessages([
     ...chatHistory, // Insert the actual chat History here
 
@@ -179,7 +173,7 @@ const generateLangChainCompletion = async (docId: string, question: string) => {
   ]);
 
   //Creat a history aware retriever
-  console.log('--- Creating a history aware retriever chain... ---');
+  //console.log('--- Creating a history aware retriever chain... ---');
   const historyAwareRetrieverChain = await createHistoryAwareRetriever({
     llm: model,
     retriever,
@@ -187,9 +181,7 @@ const generateLangChainCompletion = async (docId: string, question: string) => {
   });
 
   //Define a prompt template for answering questions based on retrieved context
-  console.log(
-    '--- Defining a prompt template for answering questions based on retrieved context... ---'
-  );
+  //console.log(    '--- Defining a prompt template for answering questions based on retrieved context... ---'  );
   const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
     ['system', "Answer the user's question based on the below context:\n\n{context}"],
 
@@ -199,28 +191,28 @@ const generateLangChainCompletion = async (docId: string, question: string) => {
   ]);
 
   //Create a document combining chain to create coherant responses
-  console.log('--- Creating a document combining chain to create coherant responses... ---');
+  //console.log('--- Creating a document combining chain to create coherant responses... ---');
   const historyAwareCombineDocsChain = await createStuffDocumentsChain({
     llm: model,
     prompt: historyAwareRetrievalPrompt,
   });
 
   //Create the main history aware retriever chain
-  console.log('--- Creating the main history aware retriever chain... ---');
+  //console.log('--- Creating the main history aware retriever chain... ---');
   const conversationalRetrievalChain = await createRetrievalChain({
     retriever: historyAwareRetrieverChain,
     combineDocsChain: historyAwareCombineDocsChain,
   });
 
   //Create the AI Reply
-  console.log('--- Creating the AI Reply... ---');
+  //console.log('--- Creating the AI Reply... ---');
   const reply = await conversationalRetrievalChain.invoke({
     chat_history: chatHistory,
     input: question,
   });
 
   //Print the result to the console
-  console.log(reply.answer);
+  //console.log(reply.answer);
   return reply.answer;
 };
 

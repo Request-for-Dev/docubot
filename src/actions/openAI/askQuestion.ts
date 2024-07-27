@@ -1,4 +1,4 @@
-//askQuestion.ts
+// askQuestion.ts
 /* eslint-disable import/prefer-default-export */
 'use server';
 
@@ -8,54 +8,86 @@ import { Message } from '@/components/Dashboard/ChatWindow';
 import { auth } from '@clerk/nextjs/server';
 import { generateLangChainCompletion } from '../langchain/langchain';
 
-const FREE_LIMIT = 10;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const PRO_LIMIT = 100;
+const FREE_DOC_LIMIT = 3;
+const PRO_DOC_LIMIT = 100;
+
 export async function askQuestion(id: string, question: string) {
-  auth().protect();
-  const { userId } = await auth();
+  try {
+    auth().protect();
+    const { userId } = await auth();
 
-  const chatRef = adminDb
-    .collection('users')
-    .doc(userId!)
-    .collection('files')
-    .doc(id)
-    .collection('chat');
+    if (!userId) {
+      console.error('🚀DEBUG askQuestion 1: User ID is null or undefined');
+      return {
+        success: false,
+        message: 'User authentication failed',
+      };
+    }
 
-  //Check how many questions the user has asked
-  const chatSnapshot = await chatRef.get();
-  const userMessages = chatSnapshot.docs.filter((doc) => doc.data().role === 'human');
+    const userRef = adminDb.collection('users').doc(userId);
+    const chatRef = userRef.collection('files').doc(id).collection('chat');
 
-  // Tomorrow Limit the users by tier
+    // Check user's subscription status
+    const userDoc = await userRef.get();
+    const hasActiveMembership = userDoc.data()?.hasActiveMembership ?? false;
 
-  const userMessage: Message = {
-    role: 'human',
-    message: question,
-    createdAt: new Date(),
-  };
+    console.log('🚀DEBUG askQuestion 2: User subscription status:', hasActiveMembership);
 
-  if (userMessages.length < FREE_LIMIT) {
+    // Get user's messages for this document
+    const chatSnapshot = await chatRef.get();
+    const userMessages = chatSnapshot.docs.filter((doc) => doc.data().role === 'human');
+
+    console.log('🚀DEBUG askQuestion 3: Number of user messages:', userMessages.length);
+
+    // Check if the user has reached their limit
+    const limit = hasActiveMembership ? PRO_DOC_LIMIT : FREE_DOC_LIMIT;
+
+    console.log('🚀DEBUG askQuestion 4: User limit:', limit);
+
+    if (userMessages.length >= limit) {
+      console.log(
+        `🚀DEBUG askQuestion 5: User has reached the ${hasActiveMembership ? 'pro' : 'free'} limit`
+      );
+      return {
+        success: false,
+        message: `You have reached the ${hasActiveMembership ? 'pro' : 'free'} limit of ${limit} questions for this document.`,
+      };
+    }
+
+    const userMessage: Message = {
+      role: 'human',
+      message: question,
+      createdAt: new Date(),
+    };
+
     await chatRef.add(userMessage);
-  } else {
+
+    console.log('🚀DEBUG askQuestion 6: User message added successfully');
+
+    // Generate AI response
+    const reply = await generateLangChainCompletion(id, question);
+
+    console.log('🚀DEBUG askQuestion 7: AI response generated');
+
+    const aiMessage: Message = {
+      role: 'ai',
+      message: reply,
+      createdAt: new Date(),
+    };
+
+    await chatRef.add(aiMessage);
+
+    console.log('🚀DEBUG askQuestion 8: AI message added successfully');
+
+    return {
+      success: true,
+      message: null,
+    };
+  } catch (error) {
+    console.error('🚀DEBUG askQuestion 9: Error in askQuestion:', error);
     return {
       success: false,
-      message: 'You have reached the free limit of 3 questions',
+      message: `An error occurred: ${error}`,
     };
   }
-
-  //Generate AI response
-  const reply = await generateLangChainCompletion(id, question);
-
-  const aiMessage: Message = {
-    role: 'ai',
-    message: reply,
-    createdAt: new Date(),
-  };
-
-  await chatRef.add(aiMessage);
-
-  return {
-    success: true,
-    message: null,
-  };
 }
