@@ -4,7 +4,9 @@ import { Message } from './ChatWindow';
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import { BotMessageSquare } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
+// import CodeBlock from './CodeBlock';
+import { MarkdownRenderer } from './Markdown';
 function ChatMessage({ message }: { message: Message }) {
   const isHuman = message.role === 'human';
   const { user } = useUser();
@@ -32,7 +34,7 @@ function ChatMessage({ message }: { message: Message }) {
       </div>
 
       <div className={`chat-bubble prose ${isHuman && 'bg-accent2 text-white'}`}>
-        <ReactMarkdown>{message.message}</ReactMarkdown>
+        <MarkdownRenderer>{message.message}</MarkdownRenderer>
       </div>
     </div>
   );

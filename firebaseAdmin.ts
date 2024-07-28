@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { getStorage } from 'firebase-admin/storage';
 import { initializeApp, getApps, App, getApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -15,5 +16,6 @@ if (getApps().length === 0) {
 }
 
 const adminDb = getFirestore(app);
+const adminStorage = getStorage(app);
 
-export { app as adminApp, adminDb };
+export { app as adminApp, adminDb, adminStorage };

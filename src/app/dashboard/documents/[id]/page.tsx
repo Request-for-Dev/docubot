@@ -20,12 +20,12 @@ async function ChatWithDocumentPage({ params: { id } }: { params: { id: string }
   return (
     <main className='grid h-full overflow-hidden lg:grid-cols-5'>
       {/* Left Side  */}
-      <div className='lg:border-accent-2 col-span-5 h-[89%] overflow-y-auto border-r-2 bg-light-100/60 lg:col-span-3'>
+      <div className='lg:border-accent-2 col-span-5 overflow-y-auto border-r-2 bg-light-100/60 lg:col-span-2'>
         {/* PDF Viewer  */}
         <PDFViewer url={url} />
       </div>
       {/* Right Side  */}
-      <div className='col-span-5 overflow-y-auto lg:col-span-2'>
+      <div className='col-span-5 overflow-auto overflow-y-auto lg:col-span-3'>
         {/* Chat Window  */}
         <ChatWindow id={id} />
       </div>

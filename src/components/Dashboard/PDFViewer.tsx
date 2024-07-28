@@ -8,6 +8,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { Button } from '@/c/ui/button';
 import { Loader2, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
+import { Input } from '../ui/input';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -15,9 +16,10 @@ function PDFViewer({ url }: { url: string }) {
   console.log('🚀 ~ PDFViewer ~ url:', url);
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [inputPageNumber, setInputPageNumber] = useState<string>('1');
   const [file, setFile] = useState<Blob | null>(null);
   const [rotation, setRotation] = useState<number>(0);
-  const [scale, setScale] = useState<number>(1);
+  const [scale, setScale] = useState<number>(0.9);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,14 +42,22 @@ function PDFViewer({ url }: { url: string }) {
     fetchFile();
   }, [url]);
 
+  const handlePageNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputPageNumber(value);
+    const pageNum = parseInt(value, 10);
+    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= numPages!) {
+      setPageNumber(pageNum);
+    }
+  };
   const onDocumentLoadSucess = ({ numPages }: { numPages: number }): void => {
     setNumPages(numPages);
     setLoading(false);
   };
   return (
     <div className='flex flex-col items-center justify-center'>
-      <div className='sticky top-0 z-50 rounded-b-lg bg-light-500/30 p-2'>
-        <div className='grid max-w-6xl grid-cols-6 gap-2 px-2'>
+      <div className='sticky top-0 z-50 rounded-b-lg bg-accent3/30 p-2'>
+        <div className='grid max-w-6xl grid-cols-6 gap-2'>
           <Button
             variant='outline'
             className=''
@@ -60,9 +70,17 @@ function PDFViewer({ url }: { url: string }) {
           >
             Previous
           </Button>
-          <p className='flex items-center justify-center'>
-            {pageNumber} of {numPages}
-          </p>
+          <div className='flex items-center justify-center'>
+            <Input
+              type='number'
+              min={1}
+              max={numPages || 1}
+              value={inputPageNumber}
+              onChange={handlePageNumberInput}
+              className='mr-2 w-16 text-center'
+            />
+            of {numPages}
+          </div>
           <Button
             variant='outline'
             className=''
@@ -102,7 +120,7 @@ function PDFViewer({ url }: { url: string }) {
         </div>
       </div>
 
-      <div className='h-full'>
+      <div className=''>
         {!file ? (
           <Loader2 className='mt-20 h-20 w-20 animate-spin-slow text-accent2' />
         ) : (

@@ -97,7 +97,7 @@ function ChatWindow({ id }: { id: string }) {
     });
   };
   return (
-    <div className='flex h-[90%] flex-col overflow-y-scroll'>
+    <div className='flex h-full flex-col overflow-scroll'>
       {/* Chat Contents  */}
       <div className='w-full flex-1'>
         {/* Chat Messages  */}
