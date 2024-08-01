@@ -6,6 +6,7 @@ import { useTransition } from 'react';
 import { Loader2, Star } from 'lucide-react';
 import { createStripePortal } from '@/actions/createStripePortal';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 function UpgradeButton() {
   const { hasActiveMembership, loading } = useSubscription();
@@ -30,16 +31,11 @@ function UpgradeButton() {
 
   if (!hasActiveMembership) {
     return (
-      <Button
-        asChild
-        variant='default'
-        className='flex items-center justify-center space-x-2'
-        onClick={handleAccount}
-      >
-        <span>
+      <Button asChild variant='default' className='flex items-center justify-center space-x-2'>
+        <Link href='/dashboard/upgrade'>
           Upgrade
           <Star className='ml-2 text-green-500' />
-        </span>
+        </Link>
       </Button>
     );
   }

@@ -58,8 +58,10 @@ function Document({ id, name, size, downloadURL }: DocumentProps) {
             }}
             className='flex w-full items-center justify-center rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white transition duration-300 ease-in-out hover:bg-red-600'
           >
-            <Trash2 className='mr-2' size={14} />
-            {!hasActiveMembership && <span className='text-xs text-gray-600'>Pro Feature</span>}
+            <Trash2 className='mr-1' size={14} />
+            {!hasActiveMembership && (
+              <span className='mr-1 text-xs text-light-600'>Pro Feature </span>
+            )}
             Delete
           </Button>
         </div>

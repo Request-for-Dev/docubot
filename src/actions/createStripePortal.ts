@@ -12,6 +12,8 @@ export async function createStripePortal() {
 
   // Get the authenticated user ID
   const { userId } = await auth();
+
+  // Throw an Error if no userId is found
   if (!userId) {
     throw new Error('No user found');
   }
