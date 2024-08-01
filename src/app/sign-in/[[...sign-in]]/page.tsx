@@ -23,10 +23,12 @@ export default function SignInPage() {
         <Clerk.Loading>
           {(isGlobalLoading) => (
             <>
+              <Clerk.GlobalError className='mb-4 text-sm text-destructive' />
+
               <SignIn.Step name='start'>
                 <Card className='w-full sm:w-96'>
                   <CardHeader>
-                    <Image src='/logo.png' alt='' width={55} height={55} />
+                    <Image src='/logo.png' alt='DocuBot logo' width={55} height={55} />
                     <CardTitle>Sign in to DocuBot</CardTitle>
                     <CardDescription>Welcome back! Please sign in to continue</CardDescription>
                   </CardHeader>
@@ -38,6 +40,7 @@ export default function SignInPage() {
                           variant='outline'
                           type='button'
                           disabled={isGlobalLoading}
+                          aria-label='Sign in with GitHub'
                         >
                           <Clerk.Loading scope='provider:github'>
                             {(isLoading) =>
@@ -59,6 +62,7 @@ export default function SignInPage() {
                           variant='outline'
                           type='button'
                           disabled={isGlobalLoading}
+                          aria-label='Sign in with Google'
                         >
                           <Clerk.Loading scope='provider:google'>
                             {(isLoading) =>
@@ -156,10 +160,8 @@ export default function SignInPage() {
                 <SignIn.Strategy name='password'>
                   <Card className='w-full sm:w-96'>
                     <CardHeader>
-                      <CardTitle>Check your email</CardTitle>
-                      <CardDescription>
-                        Enter the verification code sent to your email
-                      </CardDescription>
+                      <CardTitle>Enter your password</CardTitle>
+                      <CardDescription>Please enter your password to continue</CardDescription>
                       <p className='text-sm text-muted-foreground'>
                         Welcome back <SignIn.SafeIdentifier />
                       </p>
@@ -188,6 +190,11 @@ export default function SignInPage() {
                                 );
                               }}
                             </Clerk.Loading>
+                          </Button>
+                        </SignIn.Action>
+                        <SignIn.Action navigate='forgot-password' asChild>
+                          <Button type='button' size='sm' variant='link'>
+                            Forgot password?
                           </Button>
                         </SignIn.Action>
                         <SignIn.Action navigate='choose-strategy' asChild>
@@ -239,13 +246,13 @@ export default function SignInPage() {
                             className='text-muted-foreground'
                             fallback={({ resendableAfter }) => (
                               <Button variant='link' size='sm' disabled>
-                                Didn&apos;t recieve a code? Resend (
+                                Didn&apos;t receive a code? Resend (
                                 <span className='tabular-nums'>{resendableAfter}</span>)
                               </Button>
                             )}
                           >
                             <Button variant='link' size='sm'>
-                              Didn&apos;t recieve a code? Resend
+                              Didn&apos;t receive a code? Resend
                             </Button>
                           </SignIn.Action>
                         </div>
@@ -275,6 +282,50 @@ export default function SignInPage() {
                     </CardFooter>
                   </Card>
                 </SignIn.Strategy>
+              </SignIn.Step>
+
+              <SignIn.Step name='forgot-password'>
+                <Card className='w-full sm:w-96'>
+                  <CardHeader>
+                    <CardTitle>Forgot your password?</CardTitle>
+                    <CardDescription>
+                      Enter your email and we&apos;ll send you a reset link
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className='grid gap-y-4'>
+                    <Clerk.Field name='identifier' className='space-y-2'>
+                      <Clerk.Label asChild>
+                        <Label>Email address</Label>
+                      </Clerk.Label>
+                      <Clerk.Input type='email' required asChild>
+                        <Input />
+                      </Clerk.Input>
+                      <Clerk.FieldError className='block text-sm text-destructive' />
+                    </Clerk.Field>
+                  </CardContent>
+                  <CardFooter>
+                    <div className='grid w-full gap-y-4'>
+                      <SignIn.Action submit asChild>
+                        <Button disabled={isGlobalLoading}>
+                          <Clerk.Loading>
+                            {(isLoading) => {
+                              return isLoading ? (
+                                <Icons.spinner className='size-4 animate-spin' />
+                              ) : (
+                                'Send reset link'
+                              );
+                            }}
+                          </Clerk.Loading>
+                        </Button>
+                      </SignIn.Action>
+                      <SignIn.Action navigate='previous' asChild>
+                        <Button size='sm' variant='link'>
+                          Back to sign in
+                        </Button>
+                      </SignIn.Action>
+                    </div>
+                  </CardFooter>
+                </Card>
               </SignIn.Step>
             </>
           )}
