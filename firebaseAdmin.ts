@@ -3,7 +3,7 @@ import { getStorage } from 'firebase-admin/storage';
 import { initializeApp, getApps, App, getApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-const serviceKey = process.env.FIREBASE_SERVICE_KEY as string;
+const serviceKey = JSON.parse(process.env.FIREBASE_SERVICE_KEY as string);
 
 if (!serviceKey) {
   throw new Error('Firebase service key is not defined');
