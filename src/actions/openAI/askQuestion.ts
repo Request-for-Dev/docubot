@@ -11,6 +11,9 @@ import { generateLangChainCompletion } from '../langchain/langchain';
 const FREE_DOC_LIMIT = 3;
 const PRO_DOC_LIMIT = 100;
 
+export const maxDuration = async () => {
+  return 30; // Replace this with actual async logic if needed
+};
 export async function askQuestion(id: string, question: string) {
   try {
     auth().protect();

@@ -6,6 +6,8 @@ import Header from '@/components/Global/Header';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -55,6 +57,8 @@ export default function RootLayout({
           </ErrorBoundary>
         </body>
       </ClerkProvider>
+      <Analytics />
+      <SpeedInsights />
     </html>
   );
 }

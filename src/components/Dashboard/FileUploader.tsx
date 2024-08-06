@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import React, { useCallback, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import { CheckCircle, CircleArrowDown, Hammer, Rocket, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -21,19 +21,47 @@ function FileUploader() {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      // Do something with the files
-      const file = acceptedFiles[0];
-
-      if (file) {
-        await handleUploadDocument(file);
-      } else {
-        toast.error('Please upload a file' as string);
+      if (acceptedFiles.length === 0) {
+        return; // This case will be handled by onDropRejected
       }
 
-      toast.success(`DocuBot has consumed the Document: ${acceptedFiles[0].name}` as string);
+      const file = acceptedFiles[0];
+
+      try {
+        await handleUploadDocument(file);
+        toast.success(`DocuBot has consumed the Document: ${file.name}`);
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(`Upload failed: ${error.message}`);
+        } else {
+          toast.error('An unknown error occurred during upload');
+        }
+      }
     },
     [handleUploadDocument]
   );
+
+  const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
+    const rejection = fileRejections[0];
+    if (rejection) {
+      const { errors } = rejection;
+      if (errors.length > 0) {
+        const error = errors[0];
+        switch (error.code) {
+          case 'file-too-large':
+            toast.error('File is too large. Maximum size is 17.5MB.');
+            break;
+          case 'file-invalid-type':
+            toast.error('Invalid file type. Please upload a PDF.');
+            break;
+          default:
+            toast.error(`Upload error: ${error.message}`);
+        }
+      }
+    } else {
+      toast.error('Please upload a file');
+    }
+  }, []);
 
   const statusIcons: {
     [key in UploadStatusText]: JSX.Element;
@@ -47,7 +75,9 @@ function FileUploader() {
 
   const { getRootProps, getInputProps, isDragActive, isFocused, isDragAccept } = useDropzone({
     onDrop,
+    onDropRejected,
     maxFiles: 1,
+    maxSize: 15 * 1024 * 1024,
     accept: { 'application/pdf': ['.pdf'] },
   });
 
@@ -58,10 +88,6 @@ function FileUploader() {
       {/* File Loading Logic  */}
       {uploadInProgress && (
         <div className='mt-32 flex flex-col items-center justify-center gap-5'>
-          {/* 
-            This is not working 
-            1. Likely is not recieving any updates on progress. error trace where its stopping.
-          */}
           <div
             className={`radial-progress border-4 border-accent2 bg-accent text-light-200 ${
               progress === 100 && 'hidden'

@@ -86,7 +86,7 @@ export default function SignUpPage() {
                           ) : (
                             <>
                               <BsMicrosoft className='mr-2 size-4' />
-                              Microsfot
+                              Microsoft
                             </>
                           )}
                         </Button>

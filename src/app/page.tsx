@@ -38,9 +38,9 @@ export default function Home() {
                 Chat with your Documents & Code Repositories
               </h2>
               <p className='mb-2 py-4 text-lg leading-8 text-dark-600 dark:text-light-400 lg:mb-4'>
-                Introducing DocuBot <span className='font-bold text-accent'>DocuBot</span>
-                <br /> Upload your Documents or Repo and DocuBot will answer any questions about
-                your
+                Introducing <span className='font-bold text-accent'>DocuBot</span>
+                <br /> Upload your Documents or Code Repo and DocuBot will answer any questions
+                about your documents
                 <br /> Easy to use, <span className='font-bold text-accent'>DocuBot</span> is ideal
                 for everyone.
                 <br /> Transform your boring documents into a{' '}
@@ -61,7 +61,7 @@ export default function Home() {
           <div className='relavtive mb-8 overflow-hidden pt-16 md:mb-12 lg:mb-16'>
             <div className='mx-auto max-w-7xl px-6 lg:px-8'>
               <Image
-                src='/illustration.jpeg'
+                src='/screencap.webp'
                 alt='illustration'
                 width={2432}
                 height={1442}
