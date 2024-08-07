@@ -9,7 +9,7 @@ import { auth } from '@clerk/nextjs/server';
 import { generateLangChainCompletion } from '../langchain/langchain';
 
 const FREE_DOC_LIMIT = 3;
-const PRO_DOC_LIMIT = 100;
+const PRO_DOC_LIMIT = 25;
 
 export const maxDuration = async () => {
   return 30; // Replace this with actual async logic if needed
@@ -33,6 +33,7 @@ export async function askQuestion(id: string, question: string) {
     // Check user's subscription status
     const userDoc = await userRef.get();
     const hasActiveMembership = userDoc.data()?.hasActiveMembership ?? false;
+    console.log('🚀 ~ askQuestion ~ hasActiveMembership:', hasActiveMembership);
 
     console.log('🚀DEBUG askQuestion 2: User subscription status:', hasActiveMembership);
 

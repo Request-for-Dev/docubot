@@ -8,9 +8,11 @@ import { CheckCircle, CircleArrowDown, Hammer, Rocket, Save } from 'lucide-react
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import useUpload, { UploadStatusText } from '@/hooks/useUpload';
+import useSubscription from '@/hooks/useSubscription';
 
 function FileUploader() {
   const { progress, status, docId, handleUploadDocument } = useUpload();
+  const { isOverFileLimit, docsLoading } = useSubscription();
   const router = useRouter();
 
   useEffect(() => {
@@ -26,19 +28,26 @@ function FileUploader() {
       }
 
       const file = acceptedFiles[0];
-
-      try {
-        await handleUploadDocument(file);
-        toast.success(`DocuBot has consumed the Document: ${file.name}`);
-      } catch (error) {
-        if (error instanceof Error) {
-          toast.error(`Upload failed: ${error.message}`);
+      if (file) {
+        if (!isOverFileLimit && !docsLoading) {
+          try {
+            await handleUploadDocument(file);
+            toast.success(`DocuBot has consumed the Document: ${file.name}`);
+          } catch (error) {
+            if (error instanceof Error) {
+              toast.error(`Upload failed: ${error.message}`);
+            } else {
+              toast.error('An unknown error occurred during upload');
+            }
+          }
         } else {
-          toast.error('An unknown error occurred during upload');
+          toast.error(
+            'You have reached the maximum number of documents. Upgrade to Pro to add more documents.'
+          );
         }
       }
     },
-    [handleUploadDocument]
+    [handleUploadDocument, isOverFileLimit, docsLoading]
   );
 
   const onDropRejected = useCallback((fileRejections: FileRejection[]) => {

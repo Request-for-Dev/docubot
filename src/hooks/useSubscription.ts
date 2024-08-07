@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
 const FREE_DOC_LIMIT = 2;
-const PRO_DOC_LIMIT = 20;
+const PRO_DOC_LIMIT = 12;
 
 function useSubscription() {
   const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);

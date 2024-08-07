@@ -21,6 +21,7 @@ export default function Home() {
     ...feature,
     icon: iconMap[feature.icon as keyof typeof iconMap],
   }));
+
   return (
     <>
       <main className='flex flex-col items-center overflow-scroll overflow-x-hidden bg-gradient-to-bl from-accent3/40 to-accent2/40'>
