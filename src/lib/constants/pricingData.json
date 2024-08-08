@@ -1,0 +1,38 @@
+[
+  {
+    "plan": "Starter",
+    "price": "Free",
+    "features": [
+      "Upload Up to 5 Documents",
+      "Send Up to 3 Messages per Document",
+      "Basic Document Analytics",
+      "Standard Email Support",
+      "Explore DocuBot's AI Capabilities"
+    ]
+  },
+  {
+    "plan": "Professional",
+    "price": "$7.99/month",
+    "features": [
+      "Upload Up to 12 Documents",
+      "Send Up to 15 Messages per Document",
+      "Delete Documents",
+      "Advanced Data Export Options",
+      "Enhanced Document Analytics",
+      "Priority Email Support"
+    ]
+  },
+  {
+    "plan": "Developer",
+    "price": "Coming Soon",
+    "features": [
+      "Upload Up to 50 Documents",
+      "Send Up to 25 Messages per Document",
+      "GitHub Repository Integration",
+      "Document-to-Repo Chat Linking",
+      "Comprehensive Analytics Suite",
+      "24/7 Dedicated Support",
+      "Custom Solutions and Services"
+    ]
+  }
+]

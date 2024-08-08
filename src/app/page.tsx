@@ -1,11 +1,9 @@
 import Image from 'next/image';
 
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-
 import { FilePlus2, TextSearch, Binary, DatabaseZap, FileOutput, Eye } from 'lucide-react';
 import Footer from '@/components/Global/Footer';
 import featuresData from '@/l/util/constants.json';
+import HeroSection from '@/components/Home/HeroSection';
 
 const iconMap = {
   FilePlus2,
@@ -26,38 +24,7 @@ export default function Home() {
     <>
       <main className='flex flex-col items-center overflow-scroll overflow-x-hidden bg-gradient-to-bl from-accent3/40 to-accent2/40'>
         <div className='flex flex-col items-center justify-center p-2 lg:p-5 xl:p-12'>
-          <div className='mx-auto flex max-w-7xl flex-col items-center justify-center rounded-md bg-light-400 px-6 py-16 drop-shadow-xl dark:bg-dark-600 sm:py-8 lg:px-8'>
-            <div className='mx-auto flex max-w-2xl flex-col items-center justify-center sm:text-center'>
-              <h4 className='text-base font-semibold leading-7 text-accent'>
-                Your Interactive Document Companion
-              </h4>
-              <h1 className='sm:-text-6xl my-2 text-3xl font-bold tracking-tight text-dark-800 dark:text-light-400'>
-                Welcome to DocuBot
-              </h1>
-              <Image src='/logo.png' alt='logo' width={124} height={124} />
-              <h2 className='my-3 text-xl font-semibold'>
-                Chat with your Documents & Code Repositories
-              </h2>
-              <p className='mb-2 py-4 text-lg leading-8 text-dark-600 dark:text-light-400 lg:mb-4'>
-                Introducing <span className='font-bold text-accent'>DocuBot</span>
-                <br /> Upload your Documents or Code Repo and DocuBot will answer any questions
-                about your documents
-                <br /> Easy to use, <span className='font-bold text-accent'>DocuBot</span> is ideal
-                for everyone.
-                <br /> Transform your boring documents into a{' '}
-                <span className='font-bold text-accent3'>dynamic conversations</span>, and enhance
-                your productivity effortlessly
-              </p>
-            </div>
-            <div className='my-2 flex items-center justify-center space-x-6'>
-              <Button>
-                <Link href='/dashboard'>Get Started</Link>
-              </Button>
-              <Button>
-                <Link href='/dashboard'>See Pricing</Link>
-              </Button>
-            </div>
-          </div>
+          <HeroSection />
 
           <div className='relavtive mb-8 overflow-hidden pt-16 md:mb-12 lg:mb-16'>
             <div className='mx-auto max-w-7xl px-6 lg:px-8'>
