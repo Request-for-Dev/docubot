@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className='dark:text-cslight-600 text-csdark-700 bottom-0 w-full bg-light-500/30 py-6 dark:bg-dark-800/40'>
+    <footer className='bottom-0 w-full bg-light-500/30 py-6 text-dark-700 shadow-black inner-glow-light-60 dark:bg-dark-700/50 dark:text-light-600 dark:inner-glow-dark-70'>
       <div className='container mx-auto flex flex-wrap justify-between'>
         <div className='mb-4 w-full sm:w-1/2 md:w-1/4 lg:w-1/6'>
           <h3 className='mb-2 text-lg font-bold'>DocuBot</h3>

@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang='en'>
       <ClerkProvider>
         <body
-          className={`${inter.className} flex h-screen min-h-screen flex-col overflow-hidden bg-light-500 dark:bg-dark-600`}
+          className={`${inter.className} flex h-screen min-h-screen flex-col overflow-hidden bg-light-500 dark:bg-dark-500`}
         >
           {/* <Header /> */}
           <ErrorBoundary>

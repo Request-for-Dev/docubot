@@ -20,6 +20,12 @@ const config: Config = {
       flex: {
         full: '0 0 100%',
       },
+      strokeWidth: {
+        DEFAULT: '1',
+        '0': '0',
+        '1': '1',
+        '2': '2',
+      },
       screens: {
         xs: '420px',
         sm: '640px',
@@ -41,6 +47,11 @@ const config: Config = {
         '13': '13',
         '14': '14',
         '15': '15',
+      },
+      gradients: {
+        'lime-violet': 'linear-gradient(to right, #5029a6 0%, #8db600 100%)',
+        'red-yellow': 'linear-gradient(to right, #f83600 0%, #f9d423 100%)',
+        // Add more gradients as needed
       },
       colors: {
         accent: '#8db600',
@@ -598,6 +609,115 @@ const config: Config = {
         }
       }
       addUtilities(neonUtilities);
+    }),
+    plugin(({ theme, addUtilities }: { theme: any; addUtilities: (arg0: any) => void }) => {
+      const innerGlowUtilities: Record<string, any> = {};
+      const colors = theme('colors');
+      const opacities = theme('opacity', {});
+
+      for (const colorName in colors) {
+        if (typeof colors[colorName] === 'object') {
+          const color1 = colors[colorName][600];
+          const color2 = colors[colorName][900];
+
+          // Add the regular glow without opacity
+          innerGlowUtilities[`.inner-glow-${colorName}`] = {
+            boxShadow: `inset 0 0 10px ${color1}, inset 10px 10px 40px ${color2}`,
+          };
+
+          // Add versions with opacity
+          for (const opacityName in opacities) {
+            const opacityValue = opacities[opacityName];
+
+            innerGlowUtilities[`.inner-glow-${colorName}-${opacityName}`] = {
+              boxShadow: `inset 0 0 10px ${color1}${Math.round(opacityValue * 255)
+                .toString(16)
+                .padStart(2, '0')}, inset 10px 10px 40px ${color2}${Math.round(opacityValue * 255)
+                .toString(16)
+                .padStart(2, '0')}`,
+            };
+          }
+        }
+      }
+
+      addUtilities(innerGlowUtilities);
+    }),
+
+    plugin(function ({ addUtilities, theme }) {
+      const gradients = theme('gradients', {});
+      const newUtilities: Record<string, any> = Object.keys(gradients).reduce(
+        (acc, key) => {
+          acc[`.text-gradient-${key}`] = {
+            'background-image': gradients[key as keyof typeof gradients],
+            'background-clip': 'text',
+            '-webkit-background-clip': 'text',
+            color: 'transparent',
+          };
+          return acc;
+        },
+        {} as Record<string, any>
+      );
+      addUtilities(newUtilities);
+    }),
+    plugin(function ({ addUtilities }) {
+      const newUtilities = {
+        '.frosted-glass': {
+          background: 'rgba(255, 255, 255, 0.25)',
+          'backdrop-filter': 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.18)',
+          'box-shadow': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        },
+        '.frosted-glass-dark': {
+          background: 'rgba(0, 0, 0, 0.25)',
+          'backdrop-filter': 'blur(10px)',
+          border: '1px solid rgba(0, 0, 0, 0.18)',
+          'box-shadow': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        },
+      };
+
+      addUtilities(newUtilities);
+    }),
+    plugin(function ({ addUtilities, theme }) {
+      const strokeWidths = theme('strokeWidth', {
+        DEFAULT: '1',
+        '0': '0.5',
+        '1': '1',
+        '2': '2',
+      });
+
+      const colors = theme('colors', {});
+
+      // Define the type of utilities object
+      const utilities: Record<string, Record<string, string>> = {};
+
+      // Generate stroke width utilities
+      Object.entries(strokeWidths).forEach(([key, value]) => {
+        utilities[`.text-stroke${key === 'DEFAULT' ? '' : `-${key}`}`] = {
+          '-webkit-text-stroke-width': `${value}px`,
+          'paint-order': 'stroke fill',
+        };
+      });
+
+      // Generate stroke color utilities
+      Object.entries(colors as Record<string, string | Record<string, string>>).forEach(
+        ([colorName, color]) => {
+          if (typeof color === 'string') {
+            utilities[`.text-stroke-${colorName}`] = {
+              '-webkit-text-stroke-color': color,
+              'paint-order': 'stroke fill',
+            };
+          } else if (typeof color === 'object' && color !== null) {
+            Object.entries(color).forEach(([shade, shadeColor]) => {
+              utilities[`.text-stroke-${colorName}-${shade}`] = {
+                '-webkit-text-stroke-color': shadeColor,
+                'paint-order': 'stroke fill',
+              };
+            });
+          }
+        }
+      );
+
+      addUtilities(utilities);
     }),
   ],
 };
