@@ -42,7 +42,7 @@ function PricingPage() {
       }
 
       const sessionId = await createCheckoutSession(userDetails);
-      console.log('🚀 ~ startTransition ~ userDetails:', userDetails);
+      // console.log('🚀 ~ startTransition ~ userDetails:', userDetails);
       await stripe?.redirectToCheckout({ sessionId });
     });
   };

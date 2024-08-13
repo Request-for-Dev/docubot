@@ -20,11 +20,11 @@ export async function createStripePortal() {
 
   // Get the user document from Firestore
   const userDoc = await adminDb.collection('users').doc(userId).get();
-  console.log('🚀 ~ createStripePortal ~ userId:', userId);
+  // console.log('🚀 ~ createStripePortal ~ userId:', userId);
 
   // Retrieve the Stripe customer ID from the user document
   const stripeCustomerId = userDoc.data()?.stripecustomerId;
-  console.log('🚀 ~ createStripePortal ~ stripeCustomerId:', stripeCustomerId);
+  // console.log('🚀 ~ createStripePortal ~ stripeCustomerId:', stripeCustomerId);
 
   // Check if stripeCustomerId exists
   if (!stripeCustomerId) {

@@ -13,7 +13,7 @@ const PRO_DOC_LIMIT = 12;
 function useSubscription() {
   const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
   const [isOverFileLimit, setIsOverFileLimit] = useState(false);
-  console.log('🚀 ~ useSubscription ~ isOverFileLimit:', isOverFileLimit);
+  // console.log('🚀 ~ useSubscription ~ isOverFileLimit:', isOverFileLimit);
   const { user } = useUser();
 
   const userDocRef = user ? doc(db, 'users', user.id) : null;
@@ -26,10 +26,10 @@ function useSubscription() {
   const [docsSnapshot, docsLoading, docsError] = useCollection(userFilesCollectionRef);
 
   useEffect(() => {
-    console.log('🚀 ~ DEBUG ~ snapshot from useEffect #1 Hook:', snapshot);
+    // console.log('🚀 ~ DEBUG ~ snapshot from useEffect #1 Hook:', snapshot);
     if (snapshot && snapshot.exists()) {
       const data = snapshot.data();
-      console.log('🚀 ~ DEBUG ~ data from useEffect #1 Hook:', data);
+      // console.log('🚀 ~ DEBUG ~ data from useEffect #1 Hook:', data);
       setHasActiveMembership(data?.hasActiveMembership ?? false);
     } else {
       setHasActiveMembership(false);
@@ -41,12 +41,12 @@ function useSubscription() {
 
     const docs = docsSnapshot.docs;
     const usersLimit = hasActiveMembership ? PRO_DOC_LIMIT : FREE_DOC_LIMIT;
-    console.log('🚀 ~ DEBUG ~ docs from useEffect#2 Hook:', docs);
-    console.log('Checking if the user is over the Doc Limit.', docs.length, usersLimit);
+    // console.log('🚀 ~ DEBUG ~ docs from useEffect#2 Hook:', docs);
+    // console.log('Checking if the user is over the Doc Limit.', docs.length, usersLimit);
     setIsOverFileLimit(docs.length >= usersLimit);
   }, [docsSnapshot, hasActiveMembership]);
 
-  console.log('🚀 ~ DEBUG ~ hasActiveMembership from pre return:', hasActiveMembership);
+  // console.log('🚀 ~ DEBUG ~ hasActiveMembership from pre return:', hasActiveMembership);
 
   return {
     hasActiveMembership,

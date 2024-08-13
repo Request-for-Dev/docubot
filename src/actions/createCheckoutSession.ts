@@ -17,10 +17,10 @@ export async function createCheckoutSession(userDetails: UserDetails) {
   let stripecustomerId;
 
   const user = await adminDb.collection('users').doc(userId).get();
-  console.log('🚀 ~ createCheckoutSession ~ userId:', userId);
+  // console.log('🚀 ~ createCheckoutSession ~ userId:', userId);
 
   stripecustomerId = user.data()?.stripecustomerId;
-  console.log('🚀 ~ createCheckoutSession ~ stripecustomerId:', stripecustomerId);
+  // console.log('🚀 ~ createCheckoutSession ~ stripecustomerId:', stripecustomerId);
 
   if (!stripecustomerId) {
     // Create a new customer in stripe

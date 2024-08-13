@@ -33,25 +33,25 @@ export async function askQuestion(id: string, question: string) {
     // Check user's subscription status
     const userDoc = await userRef.get();
     const hasActiveMembership = userDoc.data()?.hasActiveMembership ?? false;
-    console.log('🚀 ~ askQuestion ~ hasActiveMembership:', hasActiveMembership);
+    // console.log('🚀 ~ askQuestion ~ hasActiveMembership:', hasActiveMembership);
 
-    console.log('🚀DEBUG askQuestion 2: User subscription status:', hasActiveMembership);
+    // console.log('🚀DEBUG askQuestion 2: User subscription status:', hasActiveMembership);
 
     // Get user's messages for this document
     const chatSnapshot = await chatRef.get();
     const userMessages = chatSnapshot.docs.filter((doc) => doc.data().role === 'human');
 
-    console.log('🚀DEBUG askQuestion 3: Number of user messages:', userMessages.length);
+    // console.log('🚀DEBUG askQuestion 3: Number of user messages:', userMessages.length);
 
     // Check if the user has reached their limit
     const limit = hasActiveMembership ? PRO_DOC_LIMIT : FREE_DOC_LIMIT;
 
-    console.log('🚀DEBUG askQuestion 4: User limit:', limit);
+    // console.log('🚀DEBUG askQuestion 4: User limit:', limit);
 
     if (userMessages.length >= limit) {
-      console.log(
-        `🚀DEBUG askQuestion 5: User has reached the ${hasActiveMembership ? 'pro' : 'free'} limit`
-      );
+      // console.log(
+      //   `🚀DEBUG askQuestion 5: User has reached the ${hasActiveMembership ? 'pro' : 'free'} limit`
+      // );
       return {
         success: false,
         message: `You have reached the ${hasActiveMembership ? 'pro' : 'free'} limit of ${limit} questions for this document.`,
@@ -66,12 +66,12 @@ export async function askQuestion(id: string, question: string) {
 
     await chatRef.add(userMessage);
 
-    console.log('🚀DEBUG askQuestion 6: User message added successfully');
+    // console.log('🚀DEBUG askQuestion 6: User message added successfully');
 
     // Generate AI response
     const reply = await generateLangChainCompletion(id, question);
 
-    console.log('🚀DEBUG askQuestion 7: AI response generated');
+    // console.log('🚀DEBUG askQuestion 7: AI response generated');
 
     const aiMessage: Message = {
       role: 'ai',
@@ -81,14 +81,14 @@ export async function askQuestion(id: string, question: string) {
 
     await chatRef.add(aiMessage);
 
-    console.log('🚀DEBUG askQuestion 8: AI message added successfully');
+    // console.log('🚀DEBUG askQuestion 8: AI message added successfully');
 
     return {
       success: true,
       message: null,
     };
   } catch (error) {
-    console.error('🚀DEBUG askQuestion 9: Error in askQuestion:', error);
+    // console.error('🚀DEBUG askQuestion 9: Error in askQuestion:', error);
     return {
       success: false,
       message: `An error occurred: ${error}`,

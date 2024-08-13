@@ -28,9 +28,9 @@ function PDFViewer({ url }: { url: string }) {
       setLoading(true);
       try {
         const response = await fetch(url);
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
-        console.log('🚀 ~ fetchFile ~ url:', url);
+        // console.log('Response status:', response.status);
+        // console.log('Response headers:', response.headers);
+        // console.log('🚀 ~ fetchFile ~ url:', url);
 
         const file = await response.blob();
         setFile(file);
@@ -129,7 +129,7 @@ function PDFViewer({ url }: { url: string }) {
             loading={null}
             onLoadSuccess={onDocumentLoadSucess}
             onLoadError={(error) => {
-              console.log('Error loading the file:', error);
+              // console.log('Error loading the file:', error);
               setError('Failed to load PDF file');
             }}
             rotate={rotation}
