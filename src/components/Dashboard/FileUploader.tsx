@@ -4,11 +4,12 @@
 import Image from 'next/image';
 import React, { useCallback, useEffect } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { CheckCircle, CircleArrowDown, Hammer, Rocket, Save } from 'lucide-react';
+import { CheckCircle, CircleArrowDown, Hammer, Lock, Rocket, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import useUpload, { UploadStatusText } from '@/hooks/useUpload';
 import useSubscription from '@/hooks/useSubscription';
+import { MdError } from 'react-icons/md';
 
 function FileUploader() {
   const { progress, status, docId, handleUploadDocument } = useUpload();
@@ -79,7 +80,8 @@ function FileUploader() {
     [UploadStatusText.UPLOADED]: <Rocket className='h-20 w-20 text-accent' />,
     [UploadStatusText.SAVING]: <Save className='h-20 w-20 text-accent' />,
     [UploadStatusText.GENERATING]: <Hammer className='h-20 w-20 text-accent' />,
-    [UploadStatusText.ERROR]: <Hammer className='h-20 w-20 text-accent' />,
+    [UploadStatusText.ERROR]: <MdError className='h-20 w-20 text-accent' />,
+    [UploadStatusText.AUTHENTICATING]: <Lock className='h-20 w-20 text-accent' />,
   };
 
   const { getRootProps, getInputProps, isDragActive, isFocused, isDragAccept } = useDropzone({

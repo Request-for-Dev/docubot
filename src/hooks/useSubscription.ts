@@ -1,11 +1,12 @@
-//  useSubscription.ts
+// useSubscription.ts
 'use client';
 
-import { db } from '#/firebase';
+import { db, auth } from '#/firebase';
 import { useUser } from '@clerk/nextjs';
 import { collection, doc } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import { signInWithCustomToken } from '@firebase/auth';
 
 const FREE_DOC_LIMIT = 2;
 const PRO_DOC_LIMIT = 12;
@@ -13,7 +14,6 @@ const PRO_DOC_LIMIT = 12;
 function useSubscription() {
   const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
   const [isOverFileLimit, setIsOverFileLimit] = useState(false);
-  // console.log('🚀 ~ useSubscription ~ isOverFileLimit:', isOverFileLimit);
   const { user } = useUser();
 
   const userDocRef = user ? doc(db, 'users', user.id) : null;
@@ -26,10 +26,42 @@ function useSubscription() {
   const [docsSnapshot, docsLoading, docsError] = useCollection(userFilesCollectionRef);
 
   useEffect(() => {
-    // console.log('🚀 ~ DEBUG ~ snapshot from useEffect #1 Hook:', snapshot);
+    const fetchFirebaseToken = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch('/api/firebase-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: user.id }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch Firebase token: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        if (!data.firebaseToken) {
+          throw new Error('No Firebase token received from the server');
+        }
+
+        await signInWithCustomToken(auth, data.firebaseToken);
+        console.log('Signed in to Firebase successfully');
+      } catch (error) {
+        console.error('Error fetching Firebase token:', error);
+      }
+    };
+
+    fetchFirebaseToken();
+  }, [user]);
+
+  useEffect(() => {
     if (snapshot && snapshot.exists()) {
       const data = snapshot.data();
-      // console.log('🚀 ~ DEBUG ~ data from useEffect #1 Hook:', data);
       setHasActiveMembership(data?.hasActiveMembership ?? false);
     } else {
       setHasActiveMembership(false);
@@ -41,12 +73,28 @@ function useSubscription() {
 
     const docs = docsSnapshot.docs;
     const usersLimit = hasActiveMembership ? PRO_DOC_LIMIT : FREE_DOC_LIMIT;
-    // console.log('🚀 ~ DEBUG ~ docs from useEffect#2 Hook:', docs);
-    // console.log('Checking if the user is over the Doc Limit.', docs.length, usersLimit);
     setIsOverFileLimit(docs.length >= usersLimit);
   }, [docsSnapshot, hasActiveMembership]);
 
-  // console.log('🚀 ~ DEBUG ~ hasActiveMembership from pre return:', hasActiveMembership);
+  // const updateSubscription = async (newMembershipStatus: boolean) => {
+  //   if (!user) return;
+
+  //   try {
+  //     await setDoc(
+  //       doc(db, 'users', user.id),
+  //       {
+  //         hasActiveMembership: newMembershipStatus,
+  //         lastUpdated: new Date(),
+  //       },
+  //       { merge: true }
+  //     );
+
+  //     setHasActiveMembership(newMembershipStatus);
+  //     console.log('Subscription status updated successfully');
+  //   } catch (error) {
+  //     console.error('Error updating subscription status:', error);
+  //   }
+  // };
 
   return {
     hasActiveMembership,
@@ -55,6 +103,7 @@ function useSubscription() {
     error,
     docsLoading,
     docsError,
+    // updateSubscription,
   };
 }
 
