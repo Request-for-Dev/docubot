@@ -9,7 +9,7 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { signInWithCustomToken } from '@firebase/auth';
 
 const FREE_DOC_LIMIT = 2;
-const PRO_DOC_LIMIT = 12;
+const PRO_DOC_LIMIT = 52;
 
 function useSubscription() {
   const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
@@ -76,26 +76,6 @@ function useSubscription() {
     setIsOverFileLimit(docs.length >= usersLimit);
   }, [docsSnapshot, hasActiveMembership]);
 
-  // const updateSubscription = async (newMembershipStatus: boolean) => {
-  //   if (!user) return;
-
-  //   try {
-  //     await setDoc(
-  //       doc(db, 'users', user.id),
-  //       {
-  //         hasActiveMembership: newMembershipStatus,
-  //         lastUpdated: new Date(),
-  //       },
-  //       { merge: true }
-  //     );
-
-  //     setHasActiveMembership(newMembershipStatus);
-  //     console.log('Subscription status updated successfully');
-  //   } catch (error) {
-  //     console.error('Error updating subscription status:', error);
-  //   }
-  // };
-
   return {
     hasActiveMembership,
     isOverFileLimit,
@@ -103,7 +83,6 @@ function useSubscription() {
     error,
     docsLoading,
     docsError,
-    // updateSubscription,
   };
 }
 

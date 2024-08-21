@@ -55,21 +55,28 @@ export async function POST(req: Request) {
   // Process the webhook
   // Use the event type to determine which function to pass the payload to.
   const eventType = evt.type;
+  console.log('🚀 ~ POST ~ eventType:', eventType);
 
   // Get the Clerk user ID from the event data
-  const { id: userId } = evt.data;
-
-  // Log the user ID and event type to the console to check if the event is being processed correctly
-  console.log(`Webhook with an ID of ${userId} and type of ${eventType}`);
+  let userId;
+  if (eventType === 'user.created' || eventType === 'user.updated') {
+    userId = evt.data.id;
+    // Log the user ID and event type to the console to check if the event is being processed correctly
+    console.log(`Webhook with an ID of ${userId} and type of ${eventType}`);
+  } else if (eventType === 'session.created') {
+    userId = evt.data.user_id;
+    // Log the user ID and event type to the console to check if the event is being processed correctly
+    console.log(`Webhook with an ID of ${userId} and type of ${eventType}`);
+  }
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
     try {
       // Generate a Firebase custom token based on the users Clerk ID
       const firebaseAuth = getAuth(adminApp);
       const firebaseToken = await firebaseAuth.createCustomToken(userId!);
-      console.log('🦟 ~ Clerk-Webhook API Route ~ firebaseToken:', firebaseToken);
 
-      const name = evt.data.first_name + ' ' + evt.data.last_name; // these come from google we want the name give durring the clerk sign up
+      const name = evt.data.first_name + ' ' + evt.data.last_name;
+
       // Store the Firebase token in Firestore
       await adminDb.collection('users').doc(userId!).set(
         {
@@ -82,6 +89,31 @@ export async function POST(req: Request) {
         { merge: true }
       );
 
+      console.log(`Firebase token generated and stored for user ${userId}`);
+    } catch (error) {
+      console.error('Error generating or storing Firebase token:', error);
+      return new NextResponse('Error processing webhook', { status: 500 });
+    }
+  }
+
+  if (eventType === 'session.created') {
+    console.log('Session created:', evt.data);
+    try {
+      // Handle the session.created event
+      // You can access the session data using evt.data.session
+      // You can perform any necessary actions based on the session creation
+      // For example, you can log the session data to the console
+      const firebaseAuth = getAuth(adminApp);
+      const firebaseToken = await firebaseAuth.createCustomToken(userId!);
+      console.log('🚀 ~ POST ~ firebaseToken:', firebaseToken);
+
+      await adminDb.collection('users').doc(userId!).set(
+        {
+          firebaseToken: firebaseToken,
+          lastUpdated: new Date(),
+        },
+        { merge: true }
+      );
       console.log(`Firebase token generated and stored for user ${userId}`);
     } catch (error) {
       console.error('Error generating or storing Firebase token:', error);

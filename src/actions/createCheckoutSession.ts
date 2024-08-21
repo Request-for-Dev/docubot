@@ -17,10 +17,10 @@ export async function createCheckoutSession(userDetails: UserDetails) {
   let stripecustomerId;
 
   const user = await adminDb.collection('users').doc(userId).get();
-  // console.log('🚀 ~ createCheckoutSession ~ userId:', userId);
+  console.log('🚀 ~ createCheckoutSession ~ userId:', userId);
 
   stripecustomerId = user.data()?.stripecustomerId;
-  // console.log('🚀 ~ createCheckoutSession ~ stripecustomerId:', stripecustomerId);
+  console.log('🚀 ~ createCheckoutSession ~ stripecustomerId:', stripecustomerId);
 
   if (!stripecustomerId) {
     // Create a new customer in stripe
@@ -33,7 +33,7 @@ export async function createCheckoutSession(userDetails: UserDetails) {
     });
 
     // This Works and puts the stripe ID in the database
-    await adminDb.collection('users').doc(userId).set({
+    await adminDb.collection('users').doc(userId).update({
       stripecustomerId: customer.id,
     });
     stripecustomerId = customer.id;
@@ -42,7 +42,8 @@ export async function createCheckoutSession(userDetails: UserDetails) {
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: 'price_1Pj3axL5fHlelvMafHXvd27p',
+        // price: 'price_1Pj3axL5fHlelvMafHXvd27p',
+        price: 'price_1Pq509L5fHlelvMavcQ9zc14',
         quantity: 1,
       },
     ],
