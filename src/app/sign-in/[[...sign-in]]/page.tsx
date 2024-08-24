@@ -1,4 +1,5 @@
 'use client';
+
 import * as Clerk from '@clerk/elements/common';
 import * as SignIn from '@clerk/elements/sign-in';
 import Link from 'next/link';
@@ -147,18 +148,9 @@ export default function SignInPage() {
                     </p>
                     <Clerk.Field name='identifier' className='space-y-2'>
                       <Clerk.Label asChild>
-                        <Label>Email address</Label>
+                        <Label>Email or Username</Label>
                       </Clerk.Label>
-                      <Clerk.Input type='email' required asChild>
-                        <Input />
-                      </Clerk.Input>
-                      <Clerk.FieldError className='block text-sm text-destructive' />
-                    </Clerk.Field>
-                    <Clerk.Field name='password' className='space-y-2'>
-                      <Clerk.Label asChild>
-                        <Label>Password</Label>
-                      </Clerk.Label>
-                      <Clerk.Input type='password' required asChild>
+                      <Clerk.Input type='text' required asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className='block text-sm text-destructive' />
@@ -174,24 +166,42 @@ export default function SignInPage() {
                           {isGlobalLoading ? (
                             <Icons.spinner className='size-4 animate-spin' />
                           ) : (
-                            'Sign in'
+                            'Continue'
                           )}
                         </Button>
                       </SignIn.Action>
                       <Button variant='link' size='sm' asChild>
                         <Link href='/sign-up'>Don&apos;t have an account? Sign up</Link>
                       </Button>
-                      <SignIn.Action navigate='forgot-password' asChild>
-                        <Button type='button' size='sm' variant='link'>
-                          Forgot password?
-                        </Button>
-                      </SignIn.Action>
                     </div>
                   </CardFooter>
                 </Card>
               </SignIn.Step>
 
               <SignIn.Step name='verifications'>
+                <SignIn.Step name='choose-strategy'>
+                  <Card className='w-full sm:w-96'>
+                    <CardHeader>
+                      <CardTitle>Choose verification method</CardTitle>
+                      <CardDescription>
+                        Select how you&apos;d like to verify your identity
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className='grid gap-y-4'>
+                      <SignIn.SupportedStrategy name='email_code' asChild>
+                        <Button variant='outline'>Email code</Button>
+                      </SignIn.SupportedStrategy>
+                      <SignIn.SupportedStrategy name='password' asChild>
+                        <Button variant='outline'>Password</Button>
+                      </SignIn.SupportedStrategy>
+                    </CardContent>
+                    <CardFooter>
+                      <SignIn.Action navigate='previous' asChild>
+                        <Button variant='link'>Go back</Button>
+                      </SignIn.Action>
+                    </CardFooter>
+                  </Card>
+                </SignIn.Step>
                 <SignIn.Strategy name='email_code'>
                   <Card className='w-full sm:w-96'>
                     <CardHeader>
@@ -263,6 +273,54 @@ export default function SignInPage() {
                             )}
                           </Button>
                         </SignIn.Action>
+                        <SignIn.Action navigate='choose-strategy' asChild>
+                          <Button size='sm' variant='link'>
+                            Use another method
+                          </Button>
+                        </SignIn.Action>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </SignIn.Strategy>
+
+                <SignIn.Strategy name='password'>
+                  <Card className='w-full sm:w-96'>
+                    <CardHeader>
+                      <CardTitle>Enter your password</CardTitle>
+                      <CardDescription>Please enter your password to continue</CardDescription>
+                    </CardHeader>
+                    <CardContent className='grid gap-y-4'>
+                      <Clerk.Field name='password' className='space-y-2'>
+                        <Clerk.Label asChild>
+                          <Label>Password</Label>
+                        </Clerk.Label>
+                        <Clerk.Input type='password' asChild>
+                          <Input />
+                        </Clerk.Input>
+                        <Clerk.FieldError className='block text-sm text-destructive' />
+                      </Clerk.Field>
+                    </CardContent>
+                    <CardFooter>
+                      <div className='grid w-full gap-y-4'>
+                        <SignIn.Action submit asChild>
+                          <Button disabled={isGlobalLoading}>
+                            {isGlobalLoading ? (
+                              <Icons.spinner className='size-4 animate-spin' />
+                            ) : (
+                              'Continue'
+                            )}
+                          </Button>
+                        </SignIn.Action>
+                        <SignIn.Action navigate='forgot-password' asChild>
+                          <Button type='button' size='sm' variant='link'>
+                            Forgot password?
+                          </Button>
+                        </SignIn.Action>
+                        <SignIn.Action navigate='choose-strategy' asChild>
+                          <Button size='sm' variant='link'>
+                            Use another method
+                          </Button>
+                        </SignIn.Action>
                       </div>
                     </CardFooter>
                   </Card>
@@ -274,15 +332,15 @@ export default function SignInPage() {
                   <CardHeader>
                     <CardTitle>Forgot your password?</CardTitle>
                     <CardDescription>
-                      Enter your email and we&apos;ll send you a reset link
+                      Enter your email or username and we&apos;ll send you a reset link
                     </CardDescription>
                   </CardHeader>
                   <CardContent className='grid gap-y-4'>
                     <Clerk.Field name='identifier' className='space-y-2'>
                       <Clerk.Label asChild>
-                        <Label>Email address</Label>
+                        <Label>Email or Username</Label>
                       </Clerk.Label>
-                      <Clerk.Input type='email' required asChild>
+                      <Clerk.Input type='text' required asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className='block text-sm text-destructive' />
@@ -290,7 +348,7 @@ export default function SignInPage() {
                   </CardContent>
                   <CardFooter>
                     <div className='grid w-full gap-y-4'>
-                      <SignIn.Action submit asChild>
+                      <SignIn.SupportedStrategy name='reset_password_email_code' asChild>
                         <Button disabled={isGlobalLoading}>
                           {isGlobalLoading ? (
                             <Icons.spinner className='size-4 animate-spin' />
@@ -298,13 +356,53 @@ export default function SignInPage() {
                             'Send reset link'
                           )}
                         </Button>
-                      </SignIn.Action>
-                      <SignIn.Action navigate='start' asChild>
+                      </SignIn.SupportedStrategy>
+                      <SignIn.Action navigate='previous' asChild>
                         <Button size='sm' variant='link'>
                           Back to sign in
                         </Button>
                       </SignIn.Action>
                     </div>
+                  </CardFooter>
+                </Card>
+              </SignIn.Step>
+
+              <SignIn.Step name='reset-password'>
+                <Card className='w-full sm:w-96'>
+                  <CardHeader>
+                    <CardTitle>Reset your password</CardTitle>
+                    <CardDescription>Enter a new password for your account</CardDescription>
+                  </CardHeader>
+                  <CardContent className='grid gap-y-4'>
+                    <Clerk.Field name='password' className='space-y-2'>
+                      <Clerk.Label asChild>
+                        <Label>New password</Label>
+                      </Clerk.Label>
+                      <Clerk.Input type='password' required asChild>
+                        <Input />
+                      </Clerk.Input>
+                      <Clerk.FieldError className='block text-sm text-destructive' />
+                    </Clerk.Field>
+                    <Clerk.Field name='confirmPassword' className='space-y-2'>
+                      <Clerk.Label asChild>
+                        <Label>Confirm password</Label>
+                      </Clerk.Label>
+                      <Clerk.Input type='password' required asChild>
+                        <Input />
+                      </Clerk.Input>
+                      <Clerk.FieldError className='block text-sm text-destructive' />
+                    </Clerk.Field>
+                  </CardContent>
+                  <CardFooter>
+                    <SignIn.Action submit asChild>
+                      <Button disabled={isGlobalLoading}>
+                        {isGlobalLoading ? (
+                          <Icons.spinner className='size-4 animate-spin' />
+                        ) : (
+                          'Reset password'
+                        )}
+                      </Button>
+                    </SignIn.Action>
                   </CardFooter>
                 </Card>
               </SignIn.Step>

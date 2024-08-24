@@ -23,12 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <ClerkProvider>
-        <body
-          className={`${inter.className} flex h-screen min-h-screen flex-col overflow-hidden bg-light-500 dark:bg-dark-500`}
-        >
-          {/* <Header /> */}
-          <ErrorBoundary>
+      <body
+        className={`${inter.className} flex h-screen min-h-screen flex-col overflow-hidden bg-light-500 dark:bg-dark-500`}
+      >
+        <ErrorBoundary>
+          <ClerkProvider>
+            {/* <Header /> */}
             <ThemeProvider
               attribute='class'
               defaultTheme='system'
@@ -54,11 +54,11 @@ export default function RootLayout({
                 }}
               />
             </ThemeProvider>
-          </ErrorBoundary>
-        </body>
-      </ClerkProvider>
-      <Analytics />
-      <SpeedInsights />
+          </ClerkProvider>
+          <Analytics />
+          <SpeedInsights />
+        </ErrorBoundary>
+      </body>
     </html>
   );
 }

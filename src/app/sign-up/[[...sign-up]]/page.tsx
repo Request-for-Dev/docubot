@@ -267,7 +267,7 @@ export default function SignUpPage() {
                       <Clerk.Label asChild>
                         <Label>Name</Label>
                       </Clerk.Label>
-                      <Clerk.Input type='text' asChild>
+                      <Clerk.Input type='text' required asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className='block text-sm text-destructive' />
@@ -288,6 +288,7 @@ export default function SignUpPage() {
               </SignUp.Step>
 
               <SignUp.Step name='verifications'>
+                <Clerk.GlobalError className='text-sm text-destructive' />
                 <SignUp.Strategy name='email_code'>
                   <Card className='w-full sm:w-96'>
                     <CardHeader>
@@ -305,7 +306,7 @@ export default function SignUpPage() {
                             <Clerk.Input
                               type='otp'
                               className='flex justify-center has-[:disabled]:opacity-50'
-                              autoSubmit
+                              required
                               render={({ value, status }) => {
                                 return (
                                   <div

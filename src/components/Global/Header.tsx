@@ -15,14 +15,16 @@ const Header = () => {
       <SignedOut>
         <Link href='/' className='flex items-center space-x-4'>
           <Image src='/logo.png' alt='logo' width={45} height={45} />
-          <h1 className='text-4xl font-bold'>DocuBot</h1>
+          <h1 className='hidden text-4xl font-bold text-gradient-lime-violet md:block'>DocuBot</h1>
         </Link>
       </SignedOut>
       <SignedIn>
         <div className='flex items-center space-x-4'>
           <Link href='/dashboard' className='flex items-center space-x-4'>
             <Image src='/logo.png' alt='logo' width={45} height={45} />
-            <h1 className='text-4xl font-bold'>DocuBot</h1>
+            <h1 className='hidden text-4xl font-bold text-gradient-lime-violet md:block'>
+              DocuBot
+            </h1>
           </Link>
           <div className='flex items-center justify-start space-x-4'>
             <Button asChild variant='default' className=''>
@@ -58,13 +60,13 @@ const Header = () => {
         </SignedIn>
         <SignedOut>
           <Link
-            className='rounded-md border border-accent bg-light-700 px-3 py-2 text-dark-800 neon-lime dark:bg-dark-400 dark:text-light-400'
+            className='rounded-md border border-accent bg-light-700 px-3 py-2 text-dark-800 neon-neon dark:bg-dark-400 dark:text-light-400'
             href='/sign-up'
           >
             <button>Sign Up</button>
           </Link>
           <Link
-            className='rounded-md border border-accent2 bg-light-700 px-3 py-2 text-dark-800 neon-violet dark:bg-dark-400 dark:text-light-400'
+            className='rounded-md border border-accent2 bg-light-700 px-3 py-2 text-dark-800 neon-neon2 dark:bg-dark-400 dark:text-light-400'
             href='/sign-in'
           >
             <button>Sign In</button>
