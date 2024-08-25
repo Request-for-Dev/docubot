@@ -89,7 +89,7 @@ Project version updated for Next.js 13.4.8 [This project will be maintained to r
 ## Bugs
 
 - [ ] Visiting another users document page will not show chat or pdf file but it allows you to hang out on blank page, lets kick the user back to the dashboard
-- [ ]
+- [ ] Session tokens only last 1 hour
 - [ ]
 
 ## Refactoring

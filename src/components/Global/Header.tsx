@@ -6,7 +6,7 @@ import DLToggle from '@/c/Global/DLToggle';
 import { dark } from '@clerk/themes';
 
 import { Button } from '../ui/button';
-import { FilePlus2, FolderGit2 } from 'lucide-react';
+import { File, FilePlus2 } from 'lucide-react';
 import UpgradeButton from '../Dashboard/UpgradeButton';
 
 const Header = () => {
@@ -28,18 +28,20 @@ const Header = () => {
           </Link>
           <div className='flex items-center justify-start space-x-4'>
             <Button asChild variant='default' className=''>
-              <Link href='/dashboard'>My Documents</Link>
+              <Link href='/dashboard'>
+                <File /> <span className='hidden md:block'>My Documents</span>
+              </Link>
             </Button>
             <Button asChild variant='default' className=''>
               <Link href='/dashboard/upload-doc'>
                 <FilePlus2 />
               </Link>
             </Button>
-            <Button asChild variant='default' className=''>
+            {/* <Button asChild variant='default' className=''>
               <Link href='/dashboard/upload-repo'>
                 <FolderGit2 />
               </Link>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </SignedIn>

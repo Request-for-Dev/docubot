@@ -5,6 +5,7 @@
 import * as Sentry from '@sentry/nextjs';
 
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+
 Sentry.init({
   dsn: dsn,
 
@@ -13,7 +14,6 @@ Sentry.init({
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
-
   replaysOnErrorSampleRate: 1.0,
 
   // This sets the sample rate to be 10%. You may want this to be 100% while
