@@ -73,7 +73,10 @@ export async function POST(req: Request) {
     try {
       // Generate a Firebase custom token based on the users Clerk ID
       const firebaseAuth = getAuth(adminApp);
-      const firebaseToken = await firebaseAuth.createCustomToken(userId!);
+      const tokenSettings = {
+        expiresIn: 60 * 60 * 24 * 30 * 1000, // 5 days
+      };
+      const firebaseToken = await firebaseAuth.createCustomToken(userId!, tokenSettings);
 
       const name = evt.data.first_name + ' ' + evt.data.last_name;
 
@@ -104,7 +107,10 @@ export async function POST(req: Request) {
       // You can perform any necessary actions based on the session creation
       // For example, you can log the session data to the console
       const firebaseAuth = getAuth(adminApp);
-      const firebaseToken = await firebaseAuth.createCustomToken(userId!);
+      const tokenSettings = {
+        expiresIn: 60 * 60 * 24 * 30 * 1000, // 5 days
+      };
+      const firebaseToken = await firebaseAuth.createCustomToken(userId!, tokenSettings);
       console.log('🚀 ~ POST ~ firebaseToken:', firebaseToken);
 
       await adminDb.collection('users').doc(userId!).set(
