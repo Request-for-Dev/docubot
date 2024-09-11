@@ -21,6 +21,7 @@ export default function Home() {
                 height={910}
                 className='rounded-xl ring ring-accent2 dark:ring-accent4/60'
               />
+
               <div aria-hidden='true' className='relative'>
                 <div className='-x-inset-32 absolute bottom-0 mb-[-0%] w-full rounded-xl bg-gradient-to-t from-light-200/85 pt-[5%] dark:from-dark-700/90' />
               </div>

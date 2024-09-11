@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // webpack: (config) => {
-  //   config.resolve.alias.canvas = false;
-
-  //   return config;
-  // },
   reactStrictMode: true,
   swcMinify: true,
   trailingSlash: true,

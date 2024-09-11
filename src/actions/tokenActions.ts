@@ -24,7 +24,9 @@ export async function isTokenExpiredAction(userId: string): Promise<boolean> {
     }
 
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-    const bufferTime = 300; // 5 minutes buffer
+    const bufferTime = currentTime + 300; // 5 minutes buffer
+
+    const expirationTime = decodedToken.exp;
 
     // Check if the token is expired or will expire in the next 5 minutes
     if (decodedToken.exp <= currentTime + bufferTime) {

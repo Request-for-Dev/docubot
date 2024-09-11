@@ -1,0 +1,36 @@
+{
+  "faqs": [
+    {
+      "question": "What is DocuBot?",
+      "answer": "DocuBot is an AI-powered tool that allows you to interact with and extract information from your PDF documents using natural language conversations."
+    },
+    {
+      "question": "How does DocuBot work?",
+      "answer": "DocuBot uses advanced natural language processing and machine learning algorithms to analyze your PDF documents. You can then ask questions or request information, and the AI will provide relevant answers based on the content of your PDFs."
+    },
+    {
+      "question": "Is my data secure?",
+      "answer": "Yes, we take data security very seriously. All uploaded documents and conversations are encrypted and stored securely. We do not share your data with any third parties."
+    },
+    {
+      "question": "What types of PDFs can I use with DocuBot?",
+      "answer": "DocuBot works with most types of PDF documents, including text-based PDFs, scanned documents (with OCR), and even PDFs with images and tables."
+    },
+    {
+      "question": "Do I need to install any software to use DocuBot?",
+      "answer": "No, DocuBot is a web-based application. You can access it through any modern web browser without needing to install any additional software."
+    },
+    {
+      "question": "Can I use DocuBot on mobile devices?",
+      "answer": "Yes, DocuBot is responsive and works on mobile devices. You can access and use it on your smartphone or tablet through a web browser."
+    },
+    {
+      "question": "Is there a limit to the number of PDFs I can analyze?",
+      "answer": "The number of PDFs you can analyze depends on your subscription plan. Please check our pricing page for more details on the limits for each plan."
+    },
+    {
+      "question": "How accurate is the information provided by DocuBot?",
+      "answer": "DocuBot strives for high accuracy, but as with any AI system, it's not perfect. We recommend using it as a tool to assist your research and always verifying important information manually."
+    }
+  ]
+}
