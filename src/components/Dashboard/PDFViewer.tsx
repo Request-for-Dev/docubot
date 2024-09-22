@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -13,10 +12,8 @@ import { Input } from '../ui/input';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function PDFViewer({ url }: { url: string }) {
-  console.log('🚀 ~ PDFViewer ~ url:', url);
-  const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [inputPageNumber, setInputPageNumber] = useState<string>('1');
+  const [numPages, setNumPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [file, setFile] = useState<Blob | null>(null);
   const [rotation, setRotation] = useState<number>(0);
   const [scale, setScale] = useState<number>(0.9);
@@ -28,10 +25,6 @@ function PDFViewer({ url }: { url: string }) {
       setLoading(true);
       try {
         const response = await fetch(url);
-        // console.log('Response status:', response.status);
-        // console.log('Response headers:', response.headers);
-        // console.log('🚀 ~ fetchFile ~ url:', url);
-
         const file = await response.blob();
         setFile(file);
       } catch (error) {
@@ -42,18 +35,22 @@ function PDFViewer({ url }: { url: string }) {
     fetchFile();
   }, [url]);
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(Math.max(1, Math.min(newPage, numPages)));
+  };
+
   const handlePageNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputPageNumber(value);
-    const pageNum = parseInt(value, 10);
-    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= numPages!) {
-      setPageNumber(pageNum);
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      handlePageChange(value);
     }
   };
-  const onDocumentLoadSucess = ({ numPages }: { numPages: number }): void => {
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     setNumPages(numPages);
     setLoading(false);
   };
+
   return (
     <div className='flex flex-col items-center justify-center'>
       <div className='sticky top-0 z-50 rounded-b-lg bg-accent3/30 p-2'>
@@ -61,12 +58,8 @@ function PDFViewer({ url }: { url: string }) {
           <Button
             variant='outline'
             className=''
-            onClick={() => {
-              if (pageNumber > 1) {
-                setPageNumber(pageNumber - 1);
-              }
-            }}
-            disabled={pageNumber <= 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
           >
             Previous
           </Button>
@@ -74,8 +67,8 @@ function PDFViewer({ url }: { url: string }) {
             <Input
               type='number'
               min={1}
-              max={numPages || 1}
-              value={inputPageNumber}
+              max={numPages}
+              value={currentPage}
               onChange={handlePageNumberInput}
               className='mr-2 w-16 text-center'
             />
@@ -84,12 +77,8 @@ function PDFViewer({ url }: { url: string }) {
           <Button
             variant='outline'
             className=''
-            onClick={() => {
-              if (pageNumber < numPages!) {
-                setPageNumber(pageNumber + 1);
-              }
-            }}
-            disabled={pageNumber >= numPages!}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= numPages}
           >
             Next
           </Button>
@@ -127,15 +116,14 @@ function PDFViewer({ url }: { url: string }) {
           <Document
             file={file}
             loading={null}
-            onLoadSuccess={onDocumentLoadSucess}
+            onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={(error) => {
-              // console.log('Error loading the file:', error);
               setError('Failed to load PDF file');
             }}
             rotate={rotation}
             className='m-4 overflow-scroll'
           >
-            <Page pageNumber={pageNumber} scale={scale} className='shadow-lg' />
+            <Page pageNumber={currentPage} scale={scale} className='shadow-lg' />
           </Document>
         )}
       </div>
