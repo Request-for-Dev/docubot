@@ -6,6 +6,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { Button } from '@/c/ui/button';
+import Link from 'next/link';
 import {
   ChevronLeft,
   ChevronRight,
@@ -17,6 +18,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { Input } from '../ui/input';
+import { useSearchParams } from 'next/navigation';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -28,7 +30,9 @@ function PDFViewer({ url }: { url: string }) {
   const [scale, setScale] = useState<number>(0.9);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState<boolean>(true);
+
+  const searchParams = useSearchParams();
+  const isPdfVisible = searchParams.get('pdf') !== 'hidden';
 
   useEffect(() => {
     const fetchFile = async () => {
@@ -61,16 +65,10 @@ function PDFViewer({ url }: { url: string }) {
     setLoading(false);
   };
 
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible);
-  };
-
   return (
-    <div
-      className={`flex flex-col transition-all duration-300 ease-in-out ${isVisible ? 'h-full w-full' : 'h-12 lg:h-full lg:w-12'}`}
-    >
+    <div className='flex h-full w-full flex-col'>
       <div className='bg-accent-100 dark:bg-accent-800 sticky top-0 z-10 flex items-center justify-between rounded-md bg-accent3/20 p-2 shadow-md'>
-        {isVisible ? (
+        {isPdfVisible ? (
           <>
             <div className='flex items-center space-x-2'>
               <Button
@@ -128,11 +126,17 @@ function PDFViewer({ url }: { url: string }) {
             </div>
           </>
         ) : null}
-        <Button variant='outline' size='icon' onClick={toggleVisibility} className='lg:rotate-90'>
-          {isVisible ? <ChevronUp className='h-4 w-4' /> : <ChevronDown className='h-4 w-4' />}
-        </Button>
+        <Link href={`?pdf=${isPdfVisible ? 'hidden' : 'visible'}`} className='ml-auto'>
+          <Button variant='outline' size='icon' className='lg:rotate-90'>
+            {isPdfVisible ? (
+              <ChevronUp className='h-4 w-4' />
+            ) : (
+              <ChevronDown className='h-4 w-4' />
+            )}
+          </Button>
+        </Link>
       </div>
-      {isVisible && (
+      {isPdfVisible && (
         <div className='flex-1 overflow-auto'>
           {!file ? (
             <div className='flex h-full items-center justify-center'>
