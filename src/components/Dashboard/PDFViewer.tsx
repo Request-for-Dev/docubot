@@ -68,9 +68,9 @@ function PDFViewer({ url }: { url: string }) {
   return (
     <div className='flex h-full w-full flex-col'>
       <div className='bg-accent-100 dark:bg-accent-800 sticky top-0 z-10 flex items-center justify-between rounded-md bg-accent3/20 p-2 shadow-md'>
-        {isPdfVisible ? (
-          <>
-            <div className='mt-4 flex items-center space-x-2'>
+        {isPdfVisible && (
+          <div className='mt-4 flex items-center space-x-2'>
+            <div className='flex items-center space-x-2'>
               <Button
                 variant='outline'
                 size='icon'
@@ -124,10 +124,13 @@ function PDFViewer({ url }: { url: string }) {
                 <ZoomOut className='h-4 w-4' />
               </Button>
             </div>
-          </>
-        ) : null}
-        <Link href={`?pdf=${isPdfVisible ? 'hidden' : 'visible'}`} className='ml-auto'>
-          <Button variant='outline' size='icon' className='lg:rotate-90'>
+          </div>
+        )}
+        <Link
+          href={`?pdf=${isPdfVisible ? 'hidden' : 'visible'}`}
+          className={`ml-auto ${!isPdfVisible ? 'fixed bottom-4 right-4 z-50' : ''}`}
+        >
+          <Button variant='outline' size='icon' className='lg:-rotate-90'>
             {isPdfVisible ? (
               <ChevronUp className='h-4 w-4' />
             ) : (
