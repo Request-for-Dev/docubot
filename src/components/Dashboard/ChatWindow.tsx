@@ -97,7 +97,7 @@ function ChatWindow({ id }: { id: string }) {
     });
   };
   return (
-    <div className='bg-accent-50 dark:bg-accent-900 flex h-full flex-col'>
+    <div className='bg-accent-50 dark:bg-accent-900 flex h-full max-w-5xl flex-col'>
       <div className='flex-1 space-y-4 overflow-y-auto p-4'>
         {loading ? (
           <div className='flex h-full items-center justify-center'>

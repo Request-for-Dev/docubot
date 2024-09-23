@@ -70,7 +70,7 @@ function PDFViewer({ url }: { url: string }) {
       <div className='bg-accent-100 dark:bg-accent-800 sticky top-0 z-10 flex items-center justify-between rounded-md bg-accent3/20 p-2 shadow-md'>
         {isPdfVisible ? (
           <>
-            <div className='flex items-center space-x-2'>
+            <div className='mt-4 flex items-center space-x-2'>
               <Button
                 variant='outline'
                 size='icon'
