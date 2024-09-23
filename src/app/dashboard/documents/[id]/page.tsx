@@ -10,26 +10,17 @@ async function ChatWithDocumentPage({ params: { id } }: { params: { id: string }
   const { userId } = await auth();
 
   const ref = await adminDb.collection('users').doc(userId!).collection('files').doc(id).get();
-
   const url = ref.data()?.downloadURL;
-  // console.log("🚀 ~ ChatWithDocumentPage ~ url:", url)
-  // if (!url) {
-  //   return <div>No URL</div>;
-  // }
 
   return (
-    <main className='grid h-full overflow-hidden lg:grid-cols-5'>
-      {/* Left Side  */}
-      <div className='lg:border-accent-2 col-span-5 overflow-y-auto border-r-2 bg-light-100/60 lg:col-span-2'>
-        {/* PDF Viewer  */}
+    <div className='flex h-[calc(100vh-64px)] flex-col overflow-hidden lg:flex-row'>
+      <div className='border-accent-200 dark:border-accent-700 h-1/2 w-full border-b lg:h-full lg:w-1/2 lg:border-b-0 lg:border-r'>
         <PDFViewer url={url} />
       </div>
-      {/* Right Side  */}
-      <div className='col-span-5 overflow-auto overflow-y-auto lg:col-span-3'>
-        {/* Chat Window  */}
+      <div className='h-1/2 w-full lg:h-full lg:w-1/2'>
         <ChatWindow id={id} />
       </div>
-    </main>
+    </div>
   );
 }
 

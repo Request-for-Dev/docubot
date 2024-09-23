@@ -6,7 +6,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { Button } from '@/c/ui/button';
-import { Loader2, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
 import { Input } from '../ui/input';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -52,66 +52,70 @@ function PDFViewer({ url }: { url: string }) {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center'>
-      <div className='sticky top-0 z-50 rounded-b-lg bg-accent3/30 p-2'>
-        <div className='grid max-w-6xl grid-cols-6 gap-2'>
-          <Button
-            variant='outline'
-            className=''
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage <= 1}
-          >
-            Previous
-          </Button>
-          <div className='flex items-center justify-center'>
-            <Input
-              type='number'
-              min={1}
-              max={numPages}
-              value={currentPage}
-              onChange={handlePageNumberInput}
-              className='mr-2 w-16 text-center'
-            />
-            of {numPages}
+    <div className='flex h-full flex-col'>
+      <div className='bg-accent-100 dark:bg-accent-800 sticky top-0 z-10 rounded-md bg-accent3/20 p-2 shadow-md'>
+        <div className='mt-3 flex items-center justify-between'>
+          <div className='flex items-center space-x-2'>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+            >
+              <ChevronLeft className='h-4 w-4' />
+            </Button>
+            <div className='flex items-center space-x-1'>
+              <Input
+                type='number'
+                min={1}
+                max={numPages}
+                value={currentPage}
+                onChange={handlePageNumberInput}
+                className='w-16 text-center'
+              />
+              <span>/ {numPages}</span>
+            </div>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= numPages}
+            >
+              <ChevronRight className='h-4 w-4' />
+            </Button>
           </div>
-          <Button
-            variant='outline'
-            className=''
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage >= numPages}
-          >
-            Next
-          </Button>
-
-          <Button
-            variant='outline'
-            className=''
-            onClick={() => setRotation((rotation + 90) % 360)}
-          >
-            <RotateCw className='text-accent2' />
-          </Button>
-          <Button
-            variant='outline'
-            className=''
-            onClick={() => setScale(scale * 1.2)}
-            disabled={scale >= 1.5}
-          >
-            <ZoomIn className='text-accent2' />
-          </Button>
-          <Button
-            variant='outline'
-            className=''
-            onClick={() => setScale(scale / 1.2)}
-            disabled={scale <= 0.5}
-          >
-            <ZoomOut className='text-accent2' />
-          </Button>
+          <div className='flex items-center space-x-2'>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => setRotation((rotation + 90) % 360)}
+            >
+              <RotateCw className='h-4 w-4' />
+            </Button>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => setScale(scale * 1.2)}
+              disabled={scale >= 2}
+            >
+              <ZoomIn className='h-4 w-4' />
+            </Button>
+            <Button
+              variant='outline'
+              size='icon'
+              onClick={() => setScale(scale / 1.2)}
+              disabled={scale <= 0.5}
+            >
+              <ZoomOut className='h-4 w-4' />
+            </Button>
+          </div>
         </div>
       </div>
-
-      <div className=''>
+      <div className='flex-1 overflow-auto'>
         {!file ? (
-          <Loader2 className='mt-20 h-20 w-20 animate-spin-slow text-accent2' />
+          <div className='flex h-full items-center justify-center'>
+            <Loader2 className='h-12 w-12 animate-spin text-accent' />
+          </div>
         ) : (
           <Document
             file={file}
@@ -121,9 +125,15 @@ function PDFViewer({ url }: { url: string }) {
               setError('Failed to load PDF file');
             }}
             rotate={rotation}
-            className='m-4 overflow-scroll'
+            className='flex justify-center'
           >
-            <Page pageNumber={currentPage} scale={scale} className='shadow-lg' />
+            <Page
+              pageNumber={currentPage}
+              scale={scale}
+              className='shadow-lg'
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
           </Document>
         )}
       </div>
